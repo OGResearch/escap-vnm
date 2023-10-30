@@ -196,7 +196,7 @@
 
     diff_log(vnm_xtr`lhs) - res_vnm_xtr`res = diff_log(vnm_wdr) + (1 - vnm_cxs) * (-0.301505159676227 * diff_log(vnm_xtdno_S / vnm_cxud)) - 0.77 * 0.0547452906141471 * wld_lock / 100;
 
-    diff(vnm_techl`lhs) = diff(wld_techl) + 0.22 * (vnm_exph[-1] / vnm_yen[-1]) - 0.029 * (vnm_exph[-1] / vnm_yen[-1])^2 - 0.0158384051706473 * diff(vnm_gini_disp) - 0.0033 * diff(vnm_pm25);
+    diff(vnm_techl`lhs) - res_vnm_techl`res = diff(wld_techl) + 0.22 * (vnm_exph[-1] / vnm_yen[-1]) - 0.029 * (vnm_exph[-1] / vnm_yen[-1])^2 - 0.0158384051706473 * diff(vnm_gini_disp) - 0.0033 * diff(vnm_pm25);
 
     vnm_rel_red`lhs * exp(-res_vnm_rel_red`res) = 5.93384579868656 + 83.1449704585364 * (vnm_expsp / vnm_yen);
 
@@ -222,7 +222,7 @@
 
     vnm_pe`lhs * exp(-res_vnm_pe`res) = vnm_pe[-1] * (vnm_oilc[-1] / (vnm_oilc[-1] + vnm_coalc[-1] + vnm_gasc[-1] + vnm_rc[-1]) * vnm_poil / vnm_poil[-1] + vnm_gasc[-1] / (vnm_oilc[-1] + vnm_coalc[-1] + vnm_gasc[-1] + vnm_rc[-1]) * vnm_pg / vnm_pg[-1] + vnm_coalc[-1] / (vnm_oilc[-1] + vnm_coalc[-1] + vnm_gasc[-1] + vnm_rc[-1]) * vnm_pc / vnm_pc[-1] + vnm_rc[-1] / (vnm_oilc[-1] + vnm_coalc[-1] + vnm_gasc[-1] + vnm_rc[-1]) * vnm_pr / vnm_pr[-1]);
 
-    diff(vnm_dep`lhs) = 0.0301330618085524 * diff_log(wld_co2);
+    diff(vnm_dep`lhs) - res_vnm_dep`res = 0.0301330618085524 * diff_log(wld_co2);
 
     diff_log(vnm_pm25`lhs) - res_vnm_pm25`res = 0.2 * (vnm_coalc[-1] / vnm_ec[-1] - vnm_coalc[-2] / vnm_ec[-2]) + 0.1 * (vnm_coalc[-2] / vnm_ec[-2] - vnm_coalc[-3] / vnm_ec[-3]) + 0.12 * (vnm_oilc[-1] / vnm_ec[-1] - vnm_oilc[-2] / vnm_ec[-2]) + 0.06 * (vnm_oilc[-2] / vnm_ec[-2] - vnm_oilc[-3] / vnm_ec[-3]) - 0.1 * vnm_sharex * (vnm_gcarb[-1] - vnm_gcarbb[-1]) / vnm_yen[-1];
 
