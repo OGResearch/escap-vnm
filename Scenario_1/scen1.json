@@ -1,52 +1,64 @@
 {
-    "scenario": {
+    "scenario": 
+    {
       "abbreviation": "RCa",
       "description": "This is a scenario when extra investment is spent on renewable energy.",
       "investment_periods": [
         {
-          "start_year": 2021,
-          "end_year": 2029,
-          "investment_size": 13.5,
+          "start_date": "2021-01-01",
+          "end_date": "2029-01-01",
+          "investment_size_per_year": 13.5,
           "currency": "USD",
           "unit": "bln",
-          "government_financing_share": 100 
+          "sector": "renewable",
+          "government_financing_share": 100,
+          "government_financing_from_reallocation": 0 
         },
         {
-          "start_year": 2030,
-          "end_year": 2050,
-          "investment_size": 23,
+          "start_date": "2030-01-01",
+          "end_date": "2050-01-01",
+          "investment_size_per_year": 23,
           "currency": "USD",
           "unit": "bln",
-          "government_financing_share": 100
+          "sector": "renewable",
+          "government_financing_share": 100,
+          "government_financing_from_reallocation": 0 
         }
-      ]
-    },
-    "attributes": {
-      "simulation_start_year": 2012,
-      "simulation_end_year": 2050
-    },
-    "exogenized_variables": {
-      "VNM_OGI": {
-        "description": "Other government investment",
-        "start_year": 2021,
-        "end_year": 2050
-      },
-      "VNM_PR": {
-        "description": "Price of renewable energy",
-        "start_year": 2021,
-        "end_year": 2050
-      }
-    },
-    "overwrite_shocks": {
-      "VNM_RC_A": {
-        "description": "Consumption of renewable energy shock",
-        "start_year": 2021,
-        "end_year": 2050
-      },
-      "VNM_IPR_A": {
-        "description": "Private gross capital formation shock",
-        "start_year": 2021,
-        "end_year": 2050
-      }
+      ],
+      "range": 
+        {
+        "simulation_start_date": "2012-01-01",
+        "simulation_end_date": "2050-01-01"
+        },
+      "exogenized_variables": 
+        {
+        "VNM_OGI": 
+        {
+          "description": "Other government investment",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        },
+        "VNM_PR": 
+        {
+          "description": "Price of renewable energy",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        }
+        },
+      "overwrite_shocks": 
+        {
+        "VNM_RC_A": 
+        {
+          "description": "Consumption of renewable energy shock",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        },
+        "VNM_IPR_A": 
+        {
+          "description": "Private gross capital formation shock",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        }
+        }
     }
-  }
+}

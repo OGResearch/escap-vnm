@@ -1,0 +1,54 @@
+{
+    "scenario": 
+    {
+      "abbreviation": "EDU",
+      "description": "This is a scenario when extra investment is spent on Education.",
+      "investment_periods": [
+        {
+          "start_date": "2023-01-01",
+          "end_date": "2030-01-01",
+          "investment_size_per_year": 159108,
+          "currency": "LCY",
+          "unit": "bln",
+          "sector": "education",
+          "government_financing_share": 100,
+          "government_financing_from_reallocation": 0 
+        }
+      ],
+      "range": 
+        {
+        "simulation_start_date": "2012-01-01",
+        "simulation_end_date": "2050-01-01"
+        },
+      "exogenized_variables": 
+        {
+        "VNM_OGC": 
+        {
+          "description": "Other government consumption",
+          "start_date": "2021-01-01",
+          "end_date": "2030-01-01"
+        },
+        "VNM_OGI": 
+        {
+          "description": "Other government investment",
+          "start_date": "2021-01-01",
+          "end_date": "2030-01-01"
+        }
+        },
+      "overwrite_shocks": 
+        {
+        "VNM_TECHL_A": 
+        {
+          "description": "Technical progress trend shock",
+          "start_date": "2021-01-01",
+          "end_date": "2030-01-01"
+        },
+        "VNM_GINI_DISP_A": 
+        {
+          "description": "Gini index shock",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "scenario": 
+    {
+      "abbreviation": "CT",
+      "description": "This is a scenario when Carbon Tax is introduced.",
+      "carbon_tax_periods": [
+        {
+          "carbon_tax_target": 90,
+          "carbon_tax_start_date": "2023-01-01",
+          "carbon_tax_end_date": "2040-01-01",
+          "carbon_subsidy_target": 0, 
+          "carbon_subsidy_start_date": "2022-01-01",
+          "carbon_subsidy_end_date": "2023-01-01",        
+          "unit": "USD per tonne CO2",
+          "spending_share_of_carbon_revenue": 0,
+          "sector1": "social",
+          "sector1_share_of_carbon_revenue": 0,
+          "sector2": "health",
+          "sector2_share_of_carbon_revenue": 0,
+          "sector3": "environmental protection",
+          "sector3_share_of_carbon_revenue": 0,
+          "sector4": "energy efficiency",
+          "sector4_share_of_carbon_revenue": 0
+        }
+      ],
+      "range": 
+        {
+        "simulation_start_date": "2012-01-01",
+        "simulation_end_date": "2050-01-01"
+        },
+      "exogenized_variables": 
+        {
+        "VNM_GCARBR": 
+        {
+          "description": "General government net (after subsidies) carbon tax rate",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        },
+        "VNM_SHAREE": 
+        {
+          "description": "Share of carbon revenue spent on environmental protection",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        },
+        "VNM_SHARESP": 
+        {
+          "description": "Share of carbon revenue spent on social protection",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        },
+        "VNM_SHAREH": 
+        {
+          "description": "Share of carbon revenue spent on health",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        },
+        "VNM_SHAREX": 
+        {
+          "description": "Share of carbon revenue spent on energy efficiency",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        }
+        },
+      "overwrite_shocks": 
+        {}
+    }
+}

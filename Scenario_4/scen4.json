@@ -1,0 +1,70 @@
+{
+    "scenario": 
+    {
+      "abbreviation": "ICT",
+      "description": "This is a scenario when extra investment is in Information and communications technology (ICT).",
+      "investment_periods": [
+        {
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01",
+          "investment_size_per_year": 20890,
+          "currency": "LCY",
+          "unit": "bln",
+          "sector": "ICT",
+          "government_financing_share": 7,
+          "government_financing_from_reallocation": 0 
+        },
+        {
+          "start_date": "2026-01-01",
+          "end_date": "2030-01-01",
+          "investment_size_per_year": 32450,
+          "currency": "LCY",
+          "unit": "bln",
+          "sector": "ICT",
+          "government_financing_share": 3,
+          "government_financing_from_reallocation": 0 
+        }
+      ],
+      "range": 
+        {
+        "simulation_start_date": "2012-01-01",
+        "simulation_end_date": "2050-01-01"
+        },
+      "exogenized_variables": 
+        {
+        "VNM_OGI": 
+        {
+          "description": "Other government investment",
+          "start_date": "2021-01-01",
+          "end_date": "2030-01-01"
+        },
+        "VNM_REL_RED": 
+        {
+          "description": "Relative redistribution parameter",
+          "start_date": "2012-01-01",
+          "end_date": "2050-01-01"
+        }
+        },
+      "overwrite_shocks": 
+        {
+        "VNM_IPR_A": 
+        {
+          "description": "Private gross capital formation shock",
+          "start_date": "2021-01-01",
+          "end_date": "2030-01-01"
+        },
+        "VNM_TECHL_A": 
+        {
+          "description": "Technical progress trend shock",
+          "start_date": "2021-01-01",
+          "end_date": "2030-01-01"
+        },
+        "VNM_FINC_A": 
+        {
+          "description": "Financial Inclusion Index shock",
+          "start_date": "2021-01-01",
+          "end_date": "2030-01-01"
+        }
+        }
+    }
+}

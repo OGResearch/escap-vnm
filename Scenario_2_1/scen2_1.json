@@ -1,0 +1,120 @@
+{
+    "scenario": 
+    {
+      "abbreviation": "NTP",
+      "description": "This is a scenario when extra investment is spent on National Target Program.",
+      "investment_periods": [
+        {
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01",
+          "investment_size_per_year": 51757,
+          "currency": "LCY",
+          "unit": "bln",
+          "sector": "infrastructure",
+          "government_financing_share": 99, 
+          "government_financing_from_reallocation": 0 
+        },
+        {
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01",
+          "investment_size_per_year": 1500,
+          "currency": "LCY",
+          "unit": "bln",
+          "sector": "health",
+          "government_financing_share": 73,
+          "government_financing_from_reallocation": 0
+        },
+        {
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01",
+          "investment_size_per_year": 426899,
+          "currency": "LCY",
+          "unit": "bln",
+          "sector": "social",
+          "government_financing_share": 3,
+          "government_financing_from_reallocation": 0 
+        },
+        {
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01",
+          "investment_size_per_year": 8604,
+          "currency": "LCY",
+          "unit": "bln",
+          "sector": "education",
+          "government_financing_share": 91,
+          "government_financing_from_reallocation": 0
+        }
+      ],
+      "range": 
+        {
+        "simulation_start_date": "2012-01-01",
+        "simulation_end_date": "2050-01-01"
+        },
+      "exogenized_variables": 
+        {
+        "VNM_OGI": 
+        {
+          "description": "Other government investment",
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01"
+        },
+        "VNM_EXPH": 
+        {
+          "description": "Government spending on healthcare",
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01"
+        },
+        "VNM_EXPSP": 
+        {
+          "description": "Government spending on social protection",
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01"
+        },
+        "VNM_EFF": 
+        {
+          "description": "Energy Efficiency Index",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        }
+        },
+      "overwrite_shocks": 
+        {
+        "VNM_IPR_A": 
+        {
+          "description": "Private gross capital formation shock",
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01"
+        },
+        "VNM_TECHL_A": 
+        {
+          "description": "Technical progress trend shock",
+          "start_date": "2021-01-01",
+          "end_date": "2026-01-01"
+        },
+        "VNM_GINI_DISP_A": 
+        {
+          "description": "Gini index shock",
+          "start_date": "2021-01-01",
+          "end_date": "2046-01-01"
+        },
+        "VNM_PM25_A": 
+        {
+          "description": "PM2.5 air pollution shock",
+          "start_date": "2021-01-01",
+          "end_date": "2050-01-01"
+        },
+        "VNM_REL_RED_A": 
+        {
+          "description": "Relative redistribution parameter shock",
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01"
+        },
+        "VNM_RPDI_A": 
+        {
+          "description": "Real personal disposable income shock",
+          "start_date": "2021-01-01",
+          "end_date": "2025-01-01"
+        }
+        }
+    }
+}
