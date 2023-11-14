@@ -1,0 +1,52 @@
+{
+    "scenario": {
+      "abbreviation": "RCa",
+      "description": "This is a scenario when extra investment is spent on renewable energy.",
+      "investment_periods": [
+        {
+          "start_year": 2021,
+          "end_year": 2029,
+          "investment_size": 13.5,
+          "currency": "USD",
+          "unit": "bln",
+          "government_financing_share": 100 
+        },
+        {
+          "start_year": 2030,
+          "end_year": 2050,
+          "investment_size": 23,
+          "currency": "USD",
+          "unit": "bln",
+          "government_financing_share": 100
+        }
+      ]
+    },
+    "attributes": {
+      "simulation_start_year": 2012,
+      "simulation_end_year": 2050
+    },
+    "exogenized_variables": {
+      "VNM_OGI": {
+        "description": "Other government investment",
+        "start_year": 2021,
+        "end_year": 2050
+      },
+      "VNM_PR": {
+        "description": "Price of renewable energy",
+        "start_year": 2021,
+        "end_year": 2050
+      }
+    },
+    "overwrite_shocks": {
+      "VNM_RC_A": {
+        "description": "Consumption of renewable energy shock",
+        "start_year": 2021,
+        "end_year": 2050
+      },
+      "VNM_IPR_A": {
+        "description": "Private gross capital formation shock",
+        "start_year": 2021,
+        "end_year": 2050
+      }
+    }
+  }
