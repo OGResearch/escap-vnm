@@ -8,7 +8,7 @@ import sys as _sy
 import utils as _ut
 
 
-_ir.min_irispie_version_required("0.22.0", )
+_ir.min_irispie_version_required("0.22.1", )
 
 
 #
@@ -69,24 +69,30 @@ start_date = _ir.yy(2022)
 end_date = _ir.yy(2026)
 span = start_date >> end_date
 
-p = _ir.PlanSimulate(m, span, )
-
 
 #
 # Baseline simulation
 #
 
 db0 = db.copy()
-s0, *_ = m.simulate(db0, span, method="period", plan=p, )
+s0, *_ = m.simulate(db0, span, method="period", )
 
 
 #
-# Simulation with 10% shock to PCR
+# Simulation plan
 #
+
+p1 = _ir.PlanSimulate(m, span, )
+
+p1.swap(start_date, ("hic", "res_hic"), )
+p1.swap(start_date, ("pcr", "res_pcr"), )
+# Equivalent to:
+# p1.exogenize(start_date, ("hic", "pcr"), )
+# p1.endogenize(start_date, ("res_hic", "res_pcr"), )
 
 db1 = db.copy()
-db1["res_pcr"] = 0.10
-s1, *_ = m.simulate(db1, span, method="period", plan=p, )
+
+s1, *_ = m.simulate(db1, span, method="period", plan=p1, )
 
 
 #
