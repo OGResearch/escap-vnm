@@ -1,12 +1,12 @@
 [
     "wld_poil",
     "wld_pr",
-    "wld_pg",
-    "wld_techl",
-    "wld_oilc",
     "wld_co2",
+    "wld_oilc",
+    "wld_techl",
     "wld_coalc",
+    "wld_pg",
     "wld_gasc",
-    "wld_pc",
-    "wld_lock"
+    "wld_lock",
+    "wld_pc"
 ]

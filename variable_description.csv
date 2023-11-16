@@ -1,435 +1,148 @@
 Variable,Description,unit
 VNM_CAN,Current Account Balance,bln USD
-VNM_CAN_0,Current Account Balance,bln USD
-VNM_CAN_A,Current Account Balance shock,
 VNM_CANOTH,"Other items for current account, including net ODI and other grants",bln USD
-VNM_CANOTH_0,"Other items for current account, including net ODI and other grants",bln USD
-VNM_CANOTH_A,"Other items for current account, including net ODI and other grants shock",
 VNM_CANRATIO,Current Account Balance,% GDP
-VNM_CANRATIO_0,Current Account Balance,% GDP
-VNM_CANRATIO_A,Current Account Balance shock,
 VNM_CLIMLOSS,"Average annual financial losses from climate shocks, Constant prices",bln LCY
 VNM_CLIMLOSS$,"Average annual financial losses from climate shocks, Constant prices shock",
-VNM_CLIMLOSS_0,"Average annual financial losses from climate shocks, Constant prices",bln LCY
-VNM_CLIMLOSS_A,"Average annual financial losses from climate shocks, Constant prices shock",
 VNM_CMUD,"Non-oil import price, 2015 = 1",USD
-VNM_CMUD_0,"Non-oil import price, 2015 = 1",USD
-VNM_CMUD_A,"Non-oil import price, 2015 = 1 shock",
 VNM_CO2,Territorial carbon dioxide emissions,MtCO2
-VNM_CO2_0,Territorial carbon dioxide emissions,MtCO2
-VNM_CO2_A,Territorial carbon dioxide emissions shock,
 VNM_COALC,Coal consumption,Exojoules
-VNM_COALC_0,Coal consumption,Exojoules
-VNM_COALC_A,Coal consumption shock,
 VNM_CTAX,"General government taxes on income, profits, and capital gains, payable by corporations",bln LCY
-VNM_CTAX_0,"General government taxes on income, profits, and capital gains, payable by corporations",bln LCY
-VNM_CTAX_A,"General government taxes on income, profits, and capital gains, payable by corporations shock",
 VNM_CTAXR,Corporate tax rate,
-VNM_CTAXR_0,Corporate tax rate,
-VNM_CTAXR_A,Corporate tax rate shock,
 VNM_CXS,"Exports of Primary commodities, precious stones and non-monetary gold as a share of Total Merchandise exports plus Total Services exports",percent / 100
-VNM_CXS_0,"Exports of Primary commodities, precious stones and non-monetary gold as a share of Total Merchandise exports plus Total Services exports",percent / 100
-VNM_CXS_A,"Exports of Primary commodities, precious stones and non-monetary gold as a share of Total Merchandise exports plus Total Services exports shock",
 VNM_CXUD,"Global non-oil export price, 2015 = 1",USD
-VNM_CXUD_0,"Global non-oil export price, 2015 = 1",USD
-VNM_CXUD_A,"Global non-oil export price, 2015 = 1 shock",
 VNM_DEP,Depreciation rate of capital stock,percent / 100
-VNM_DEP_0,Depreciation rate of capital stock,percent / 100
-VNM_DEP_A,Depreciation rate of capital stock shock,
 VNM_EC,Primary energy consumption,Exojoules
-VNM_EC_0,Primary energy consumption,Exojoules
-VNM_EC_A,Primary energy consumption shock,
 VNM_EFEX,"Effective exchange rate, 2015 = 1",index
-VNM_EFEX_0,"Effective exchange rate, 2015 = 1",index
-VNM_EFEX_A,"Effective exchange rate, 2015 = 1 shock",
 VNM_EFF,Energy efficiency index,index
-VNM_EFF_0,Energy efficiency index,index
-VNM_EFF_A,Energy efficiency index shock,
 VNM_ENAB,Average score on enabling factors,
-VNM_ENAB_0,Average score on enabling factors,
-VNM_ENAB_A,Average score on enabling factors shock,
 VNM_EXP,General government expenditure,bln LCY
-VNM_EXP_0,General government expenditure,bln LCY
-VNM_EXP_A,General government expenditure shock,
 VNM_EXPE,General government expenditure on environmental protection,bln LCY
-VNM_EXPE_0,General government expenditure on environmental protection,bln LCY
-VNM_EXPE_A,General government expenditure on environmental protection shock,
 VNM_EXPH,General government expenditure on health,bln LCY
-VNM_EXPH_0,General government expenditure on health,bln LCY
-VNM_EXPH_A,General government expenditure on health shock,
 VNM_EXPSP,General government expense on social benefits,bln LCY
-VNM_EXPSP_0,General government expense on social benefits,bln LCY
-VNM_EXPSP_A,General government expense on social benefits shock,
 VNM_EXR,Exchange rate,LCY per USD
-VNM_EXR_0,Exchange rate,LCY per USD
-VNM_EXR_A,Exchange rate shock,
 VNM_FINC,Benchmark index for financial inclusion,index
-VNM_FINC_0,Benchmark index for financial inclusion,index
-VNM_FINC_A,Benchmark index for financial inclusion shock,
 VNM_FUELSH,Fuel exports (SITC 3) as a share of nominal GDP,% GDP
-VNM_FUELSH_0,Fuel exports (SITC 3) as a share of nominal GDP,% GDP
 VNM_GASC,Natural gas consumption,Exojoules
-VNM_GASC_0,Natural gas consumption,Exojoules
-VNM_GASC_A,Natural gas consumption shock,
 VNM_GCARB,General government net (after subsidies) carbon tax revenue,bln LCY
-VNM_GCARB_0,General government net (after subsidies) carbon tax revenue,bln LCY
-VNM_GCARB_A,General government net (after subsidies) carbon tax revenue shock,
 VNM_GCARBR,General government net (after subsidies) carbon tax rate,USD per tonne of CO2
-VNM_GCARBR_0,General government net (after subsidies) carbon tax rate,USD per tonne of CO2
-VNM_GCARBR_A,General government net (after subsidies) carbon tax rate shock,
 VNM_GCOM,General government resource-related revenue,bln LCY
-VNM_GCOM_0,General government resource-related revenue,bln LCY
-VNM_GCOM_A,General government resource-related revenue shock,
 VNM_GCR,"General government final consumption expenditure, Constant 2015 prices",bln LCY
-VNM_GCR_0,"General government final consumption expenditure, Constant 2015 prices",bln LCY
-VNM_GCR_A,"General government final consumption expenditure, Constant 2015 prices shock",
 VNM_GDFXSH,Foreign currency share of general government gross debt,percent / 100
-VNM_GDFXSH_0,Foreign currency share of general government gross debt,percent / 100
-VNM_GDFXSH_A,Foreign currency share of general government gross debt shock,
 VNM_GDI,"Gross domestic income (terms of trade adjusted), Constant 2015 prices",bln LCY
-VNM_GDI_0,"Gross domestic income (terms of trade adjusted), Constant 2015 prices",bln LCY
-VNM_GDI_A,"Gross domestic income (terms of trade adjusted), Constant 2015 prices shock",
 VNM_GDN,General government gross debt,bln LCY
-VNM_GDN_0,General government gross debt,bln LCY
-VNM_GDN_A,General government gross debt shock,
 VNM_GDNRATIO,Gross government debt,% GDP
-VNM_GDNRATIO_0,Gross government debt,% GDP
-VNM_GDNRATIO_A,Gross government debt shock,
 VNM_GINI_DISP,"Estimate of Gini index of inequality in equivalized household disposable (post-tax, post-transfer) income",index
-VNM_GINI_DISP_0,"Estimate of Gini index of inequality in equivalized household disposable (post-tax, post-transfer) income",index
-VNM_GINI_DISP_A,"Estimate of Gini index of inequality in equivalized household disposable (post-tax, post-transfer) income shock",
 VNM_GINT,General government average interest rate on outstanding debt,percent per annum
-VNM_GINT_0,General government average interest rate on outstanding debt,percent per annum
-VNM_GINT_A,General government average interest rate on outstanding debt shock,
 VNM_GIP,Gross government interest payments,bln LCY
-VNM_GIP_0,Gross government interest payments,bln LCY
-VNM_GIP_A,Gross government interest payments shock,
 VNM_GLN,General government net lending (fiscal balance),bln LCY
-VNM_GLN_0,General government net lending (fiscal balance),bln LCY
-VNM_GLN_A,General government net lending (fiscal balance) shock,
 VNM_GLNRATIO,General government net lending (fiscal balance),% GDP
-VNM_GLNRATIO_0,General government net lending (fiscal balance),% GDP
-VNM_GLNRATIO_A,General government net lending (fiscal balance) shock,
 VNM_GLNT,Target for government fiscal balance,% GDP
-VNM_GLNT_0,Target for government fiscal balance,% GDP
-VNM_GLNT_A,Target for government fiscal balance shock,
 VNM_GOTH,Government other net revenue,bln LCY
-VNM_GOTH_0,Government other net revenue,bln LCY
-VNM_GOTH_A,Government other net revenue shock,
 VNM_GTRADE,General government taxes on international trade and transactions,bln LCY
-VNM_GTRADE_0,General government taxes on international trade and transactions,bln LCY
-VNM_GTRADE_A,General government taxes on international trade and transactions shock,
 VNM_GTRADER,Tax rate on international trade and transactions,percent / 100
-VNM_GTRADER_0,Tax rate on international trade and transactions,percent / 100
-VNM_GTRADER_A,Tax rate on international trade and transactions shock,
 VNM_HEAD19,Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population),% of population
-VNM_HEAD19_0,Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population),% of population
-VNM_HEAD19_A,Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population) shock,
 VNM_HEAD55,Poverty headcount ratio at $5.50 a day (2011 PPP) (% of population),% of population
-VNM_HEAD55_0,Poverty headcount ratio at $5.50 a day (2011 PPP) (% of population),% of population
-VNM_HEAD55_A,Poverty headcount ratio at $5.50 a day (2011 PPP) (% of population) shock,
 VNM_HIC,"Consumer Price Index, Period Average, 2015 = 100",index
-VNM_HIC_0,"Consumer Price Index, Period Average, 2015 = 100",index
-VNM_HIC_A,"Consumer Price Index, Period Average, 2015 = 100 shock",
 VNM_IGR,"Public gross fixed capital formation, Constant 2015 prices",bln LCY
-VNM_IGR_0,"Public gross fixed capital formation, Constant 2015 prices",bln LCY
-VNM_IGR_A,"Public gross fixed capital formation, Constant 2015 prices shock",
 VNM_INFT,Inflation target (not necessarily explicit),percent
-VNM_INFT_0,Inflation target (not necessarily explicit),percent
-VNM_INFT_A,Inflation target (not necessarily explicit) shock,
 VNM_INT,Monetary Policy-Related Interest Rate,percent per annum
-VNM_INT_0,Monetary Policy-Related Interest Rate,percent per annum
-VNM_INT_A,Monetary Policy-Related Interest Rate shock,
 VNM_IPR,"Private gross fixed capital formation, Constant 2015 prices",bln LCY
-VNM_IPR_0,"Private gross fixed capital formation, Constant 2015 prices",bln LCY
-VNM_IPR_A,"Private gross fixed capital formation, Constant 2015 prices shock",
 VNM_ITAX,General government taxes on goods and services,bln LCY
-VNM_ITAX_0,General government taxes on goods and services,bln LCY
-VNM_ITAX_A,General government taxes on goods and services shock,
 VNM_ITAXR,Tax rate on goods and services,percent / 100
-VNM_ITAXR_0,Tax rate on goods and services,percent / 100
-VNM_ITAXR_A,Tax rate on goods and services shock,
 VNM_ITR,"Gross fixed capital formation (including Acquisitions less disposals of valuables), Constant 2015 prices",bln LCY
-VNM_ITR_0,"Gross fixed capital formation (including Acquisitions less disposals of valuables), Constant 2015 prices",bln LCY
-VNM_ITR_A,"Gross fixed capital formation (including Acquisitions less disposals of valuables), Constant 2015 prices shock",
 VNM_K,"Capital stock, Constant 2015 prices",bln LCY
-VNM_K_0,"Capital stock, Constant 2015 prices",bln LCY
-VNM_K_A,"Capital stock, Constant 2015 prices shock",
 VNM_KSTAR,"Trend capital stock, Constant 2015 prices",bln LCY
-VNM_KSTAR_0,"Trend capital stock, Constant 2015 prices",bln LCY
 VNM_KY,"Trend capital stock, Constant 2015 prices shock",
 VNM_LABSH,Share of labour compensation in GDP at current national prices,percent / 100
-VNM_LABSH_0,Share of labour compensation in GDP at current national prices,percent / 100
-VNM_LABSH_A,Share of labour compensation in GDP at current national prices shock,
 VNM_LFN,Labour Force,1000s
-VNM_LFN_0,Labour Force,1000s
-VNM_LFN_A,Labour Force shock,
 VNM_LIVES,Lives lost from climate shocks,1000s
-VNM_LIVES_0,Lives lost from climate shocks,1000s
-VNM_LIVES_A,Lives lost from climate shocks shock,
 VNM_LNN,Employment,1000s
-VNM_LNN_0,Employment,1000s
-VNM_LNN_A,Employment shock,
 VNM_LNNF,Female employment,1000s
-VNM_LNNF_0,Female employment,1000s
-VNM_LNNF_A,Female employment shock,
 VNM_LOCK,Change in stringency of measures introduced to contain the pandemic,
-VNM_LOCK_0,Change in stringency of measures introduced to contain the pandemic,
-VNM_LOCK_A,Change in stringency of measures introduced to contain the pandemic shock,
 VNM_LRX,Participation ratio,percent / 100
-VNM_LRX_0,Participation ratio,percent / 100
-VNM_LRX_A,Participation ratio shock,
 VNM_LTI,Long-term bond yield,percent per annum
-VNM_LTI_0,Long-term bond yield,percent per annum
-VNM_LTI_A,Long-term bond yield shock,
 VNM_MTD,"Deflator for Imports of Goods and Services, National currency, 2015 = 100",index
-VNM_MTD_0,"Deflator for Imports of Goods and Services, National currency, 2015 = 100",index
-VNM_MTD_A,"Deflator for Imports of Goods and Services, National currency, 2015 = 100 shock",
 VNM_MTN,"Imports of goods and services, Current prices",bln LCY
 VNM_MTN$,"Imports of goods and services, Current prices",USD
-VNM_MTN$_0,"Imports of goods and services, Current prices",USD
-VNM_MTN$_A,"Imports of goods and services, Current prices shock",
-VNM_MTN_0,"Imports of goods and services, Current prices",bln LCY
-VNM_MTN_A,"Imports of goods and services, Current prices shock",
 VNM_MTR,"Imports of goods and services, Constant 2015 prices",bln LCY
 VNM_MTR$,"Imports of goods and services, Constant 2015 prices",bln USD
-VNM_MTR$_0,"Imports of goods and services, Constant 2015 prices",bln USD
-VNM_MTR$_A,"Imports of goods and services, Constant 2015 prices shock",
-VNM_MTR_0,"Imports of goods and services, Constant 2015 prices",bln LCY
-VNM_MTR_A,"Imports of goods and services, Constant 2015 prices shock",
 VNM_OGC,Other general government consumption expenditure,bln LCY
-VNM_OGC_0,Other general government consumption expenditure,bln LCY
-VNM_OGC_A,Other general government consumption expenditure shock,
 VNM_OGI,Other general government investment expenditure,bln LCY
-VNM_OGI_0,Other general government investment expenditure,bln LCY
-VNM_OGI_A,Other general government investment expenditure shock,
 VNM_OILC,Oil consumption,Exojoules
-VNM_OILC_0,Oil consumption,Exojoules
-VNM_OILC_A,Oil consumption shock,
 VNM_OMS,"Imports of Petroleum, petroleum products and related materials as a share of Total Merchandise imports plus Total Services imports",percent / 100
-VNM_OMS_0,"Imports of Petroleum, petroleum products and related materials as a share of Total Merchandise imports plus Total Services imports",percent / 100
-VNM_OMS_A,"Imports of Petroleum, petroleum products and related materials as a share of Total Merchandise imports plus Total Services imports shock",
 VNM_OXS,"Exports of Petroleum, petroleum products and related materials as a share of Total Merchandise exports plus Total Services exports",percent / 100
-VNM_OXS_0,"Exports of Petroleum, petroleum products and related materials as a share of Total Merchandise exports plus Total Services exports",percent / 100
-VNM_OXS_A,"Exports of Petroleum, petroleum products and related materials as a share of Total Merchandise exports plus Total Services exports shock",
 VNM_PC,"Domestic price of coal, inclusive of net carbon tax",USD per mln kJ
-VNM_PC_0,"Domestic price of coal, inclusive of net carbon tax",USD per mln kJ
-VNM_PC_A,"Domestic price of coal, inclusive of net carbon tax shock",
 VNM_PCR,"Household consumption expenditure (including Non-profit institutions serving households), Constant 2015 prices",bln LCY
-VNM_PCR_0,"Household consumption expenditure (including Non-profit institutions serving households), Constant 2015 prices",bln LCY
-VNM_PCR_A,"Household consumption expenditure (including Non-profit institutions serving households), Constant 2015 prices shock",
 VNM_PE,"Domestic price of energy, inclusive of net carbon tax",USD per mln kJ
-VNM_PE_0,"Domestic price of energy, inclusive of net carbon tax",USD per mln kJ
-VNM_PE_A,"Domestic price of energy, inclusive of net carbon tax shock",
 VNM_PG,"Domestic price of natural gas, inclusive of net carbon tax",USD per mln kJ
-VNM_PG_0,"Domestic price of natural gas, inclusive of net carbon tax",USD per mln kJ
-VNM_PG_A,"Domestic price of natural gas, inclusive of net carbon tax shock",
 VNM_PM25,"PM2.5 air pollution, mean annual exposure",micrograms per cubic meter
-VNM_PM25_0,"PM2.5 air pollution, mean annual exposure",micrograms per cubic meter
-VNM_PM25_A,"PM2.5 air pollution, mean annual exposure shock",
 VNM_POIL,"Domestic price of oil, inclusive of net carbon tax",USD per mln kJ
-VNM_POIL_0,"Domestic price of oil, inclusive of net carbon tax",USD per mln kJ
-VNM_POIL_A,"Domestic price of oil, inclusive of net carbon tax shock",
 VNM_POPT,Total population,1000s
-VNM_POPT_0,Total population,1000s
-VNM_POPT_A,Total population shock,
 VNM_POPWA,Population aged 15-64,1000s
-VNM_POPWA_0,Population aged 15-64,1000s
-VNM_POPWA_A,Population aged 15-64 shock,
 VNM_PR,Domestic price of renewable energy,USD per mln kJ
-VNM_PR_0,Domestic price of renewable energy,USD per mln kJ
-VNM_PR_A,Domestic price of renewable energy shock,
 VNM_PREM,Country-specific risk premium,basis point
-VNM_PREM_0,Country-specific risk premium,basis point
-VNM_PREM_A,Country-specific risk premium shock,
 VNM_PROF,Profits,bln LCY
-VNM_PROF_0,Profits,bln LCY
-VNM_PROF_A,Profits shock,
 VNM_RC,"Consumption of non-fossil fuel energy (nuclear, hydro and renewables)",Exojoules
-VNM_RC_0,"Consumption of non-fossil fuel energy (nuclear, hydro and renewables)",Exojoules
-VNM_RC_A,"Consumption of non-fossil fuel energy (nuclear, hydro and renewables) shock",
 VNM_REFEX,"Real effective exchange rate, 2015 = 1",index
-VNM_REFEX_0,"Real effective exchange rate, 2015 = 1",index
-VNM_REFEX_A,"Real effective exchange rate, 2015 = 1 shock",
 VNM_REL_RED,Relative redistribution parameter (percentage difference between Gini Coefficients measures in terms of gross and disposable income),
-VNM_REL_RED_0,Relative redistribution parameter (percentage difference between Gini Coefficients measures in terms of gross and disposable income),
-VNM_REL_RED_A,Relative redistribution parameter (percentage difference between Gini Coefficients measures in terms of gross and disposable income) shock,
 VNM_REMIT,Inflow of personal remittances,bln LCY
-VNM_REMIT_0,Inflow of personal remittances,bln LCY
-VNM_REMIT_A,Inflow of personal remittances shock,
 VNM_REV,General government revenue,bln LCY
-VNM_REV_0,General government revenue,bln LCY
-VNM_REV_A,General government revenue shock,
 VNM_REVG,"General government revenue, grants",bln LCY
-VNM_REVG_0,"General government revenue, grants",bln LCY
-VNM_REVG_A,"General government revenue, grants shock",
 VNM_RPDI,"Real personal disposable income, Constant 2015 prices",bln LCY
-VNM_RPDI_0,"Real personal disposable income, Constant 2015 prices",bln LCY
-VNM_RPDI_A,"Real personal disposable income, Constant 2015 prices shock",
 VNM_SCR,"Accumulation of inventories, Constant 2015 prices",bln LCY
-VNM_SCR_0,"Accumulation of inventories, Constant 2015 prices",bln LCY
-VNM_SCR_A,"Accumulation of inventories, Constant 2015 prices shock",
 VNM_SDLI,Standard deviation of log income,
-VNM_SDLI_0,Standard deviation of log income,
-VNM_SDLI_A,Standard deviation of log income shock,
 VNM_SHAREE,Share of carbon revenue spent on environmental protection,percent / 100
-VNM_SHAREE_0,Share of carbon revenue spent on environmental protection,
-VNM_SHAREE_A,Share of carbon revenue spent on environmental protection shock,
 VNM_SHAREH,Share of carbon revenue spent on health,percent / 100
-VNM_SHAREH_0,Share of carbon revenue spent on health,
-VNM_SHAREH_A,Share of carbon revenue spent on health shock,
 VNM_SHARESP,Share of carbon revenue spent on social protection,percent / 100
-VNM_SHARESP_0,Share of carbon revenue spent on social protection,
-VNM_SHARESP_A,Share of carbon revenue spent on social protection shock,
 VNM_SHAREX,Share of carbon revenue spent on energy efficiency gains,percent / 100
-VNM_SHAREX_0,Share of carbon revenue spent on energy efficiency gains,
-VNM_SHAREX_A,Share of carbon revenue spent on energy efficiency gains shock,
 VNM_SOLV,Solvency rule switch,
-VNM_SOLV_0,Solvency rule switch,
-VNM_SOLV_A,Solvency rule switch shock,
 VNM_TAX,"General government taxes on income, profits, and capital gains, payable by individuals, plus social contributions",bln LCY
-VNM_TAX_0,"General government taxes on income, profits, and capital gains, payable by individuals, plus social contributions",bln LCY
-VNM_TAX_A,"General government taxes on income, profits, and capital gains, payable by individuals, plus social contributions shock",
 VNM_TAXR,Income tax rate,
-VNM_TAXR_0,Income tax rate,
-VNM_TAXR_A,Income tax rate shock,
 VNM_TECHL,"Labour augmenting technical progress trend, indexed to GDP per employee in 2015",index
-VNM_TECHL_0,"Labour augmenting technical progress trend, indexed to GDP per employee in 2015",index
-VNM_TECHL_A,"Labour augmenting technical progress trend, indexed to GDP per employee in 2015 shock",
 VNM_TFP,Trend TFP growth rate,log diff
-VNM_TFP_0,Trend TFP growth rate,log diff
-VNM_TFP_A,Trend TFP growth rate shock,
 VNM_TOURSH,Travel and transport services exports as a share of nominal GDP,% GDP
-VNM_TOURSH_0,Travel and transport services exports as a share of nominal GDP,% GDP
 VNM_URX,Unemployment Rate (ILO definition),percent / 100
-VNM_URX_0,Unemployment Rate (ILO definition),percent / 100
-VNM_URX_A,Unemployment Rate (ILO definition) shock,
 VNM_URXF,Female unemployment Rate (ILO definition),
-VNM_URXF_0,Female unemployment Rate (ILO definition),
-VNM_URXF_A,Female unemployment Rate (ILO definition) shock,
 VNM_USER,User cost of capital,percent / 100
-VNM_USER_0,User cost of capital,percent / 100
-VNM_USER_A,User cost of capital shock,
 VNM_WDR,"Trade-weighted external demand, Constant 2015 prices",bln USD
-VNM_WDR_0,"Trade-weighted external demand, Constant 2015 prices",bln USD
-VNM_WDR_A,"Trade-weighted external demand, Constant 2015 prices shock",
 VNM_XTD$,"Deflator for  Export of Good & Services, 2015 =100",USD
-VNM_XTD$_0,"Deflator for  Export of Good & Services, 2015 =100",USD
-VNM_XTD$_A,"Deflator for  Export of Good & Services, 2015 =100 shock",
 VNM_XTDNO$,"Non-oil export price deflator, 2015 =100",USD
-VNM_XTDNO$_0,"Non-oil export price deflator, 2015 =100",USD
-VNM_XTDNO$_A,"Non-oil export price deflator, 2015 =100 shock",
 VNM_XTN,"Exports of goods and services, Current prices",bln LCY
 VNM_XTN$,"Exports of goods and services, Current prices",bln USD
-VNM_XTN$_0,"Exports of goods and services, Current prices",bln USD
-VNM_XTN$_A,"Exports of goods and services, Current prices shock",
-VNM_XTN_0,"Exports of goods and services, Current prices",bln LCY
-VNM_XTN_A,"Exports of goods and services, Current prices shock",
 VNM_XTR,"Exports of goods and services, Constant 2015 prices",bln LCY
 VNM_XTR$,"Exports of goods and services, Constant 2015 prices",bln USD
-VNM_XTR$_0,"Exports of goods and services, Constant 2015 prices",bln USD
-VNM_XTR$_A,"Exports of goods and services, Constant 2015 prices shock",
-VNM_XTR_0,"Exports of goods and services, Constant 2015 prices",bln LCY
-VNM_XTR_A,"Exports of goods and services, Constant 2015 prices shock",
 VNM_YBAR,"Survey mean consumption or income per capita, total population (2011 PPP $ per day)",2011 PPP % per day
-VNM_YBAR_0,"Survey mean consumption or income per capita, total population (2011 PPP $ per day)",2011 PPP % per day
-VNM_YBAR_A,"Survey mean consumption or income per capita, total population (2011 PPP $ per day) shock",
 VNM_YED,"Deflator for  GDP, National Currency, 2015 =100",LCY
-VNM_YED_0,"Deflator for  GDP, National Currency, 2015 =100",LCY
-VNM_YED_A,"Deflator for  GDP, National Currency, 2015 =100 shock",
 VNM_YEN,"Gross Domestic Product (GDP), Current prices",bln LCY
 VNM_YEN$,"Gross Domestic Product (GDP), Current prices",bln USD
-VNM_YEN$_0,"Gross Domestic Product (GDP), Current prices",bln USD
-VNM_YEN$_A,"Gross Domestic Product (GDP), Current prices shock",
-VNM_YEN_0,"Gross Domestic Product (GDP), Current prices",bln LCY
-VNM_YEN_A,"Gross Domestic Product (GDP), Current prices shock",
 VNM_YER,"Gross Domestic Product (GDP), Constant 2015 prices",bln LCY
 VNM_YER$,"Gross Domestic Product (GDP), Constant 2015 prices",bln USD
-VNM_YER$_0,"Gross Domestic Product (GDP), Constant 2015 prices",bln USD
-VNM_YER$_A,"Gross Domestic Product (GDP), Constant 2015 prices shock",
-VNM_YER_0,"Gross Domestic Product (GDP), Constant 2015 prices",bln LCY
-VNM_YER_A,"Gross Domestic Product (GDP), Constant 2015 prices shock",
 VNM_YFT,"Trend output, Constant 2015 prices",bln LCY
 VNM_YFT$,"Trend output, Constant 2015 prices",bln USD
-VNM_YFT$_0,"Trend output, Constant 2015 prices",bln USD
-VNM_YFT$_A,"Trend output, Constant 2015 prices shock",
-VNM_YFT_0,"Trend output, Constant 2015 prices",bln LCY
-VNM_YFT_A,"Trend output, Constant 2015 prices shock",
 WLD_CO2,Territorial carbon dioxide emissions,MtCO2
-WLD_CO2_0,Territorial carbon dioxide emissions,MtCO2
-WLD_CO2_A,Territorial carbon dioxide emissions shock,
 WLD_COALC,Coal consumption,Exojoules
-WLD_COALC_0,Coal consumption,Exojoules
-WLD_COALC_A,Coal consumption shock,
 WLD_DD$,"Domestic demand,  Constant 2015 prices",bln USD
-WLD_DD$_0,"Domestic demand,  Constant 2015 prices",bln USD
-WLD_DD$_A,"Domestic demand,  Constant 2015 prices shock",
 WLD_EC,Primary energy consumption,Exojoules
-WLD_EC_0,Primary energy consumption,Exojoules
-WLD_EC_A,Primary energy consumption shock,
 WLD_GASC,Natural gas consumption,Exojoules
-WLD_GASC_0,Natural gas consumption,Exojoules
-WLD_GASC_A,Natural gas consumption shock,
 WLD_HIC,"Consumer Price Index, Period Average, 2015=100",index
-WLD_HIC_0,"Consumer Price Index, Period Average, 2015=100",index
-WLD_HIC_A,"Consumer Price Index, Period Average, 2015=100 shock",
 WLD_LOCK,Change in stringency of measures introduced to contain the pandemic,
-WLD_LOCK_0,Change in stringency of measures introduced to contain the pandemic,
-WLD_LOCK_A,Change in stringency of measures introduced to contain the pandemic shock,
 WLD_MTN$,"Imports of goods and services,  Current prices",bln USD
-WLD_MTN$_0,"Imports of goods and services,  Current prices",bln USD
-WLD_MTN$_A,"Imports of goods and services,  Current prices shock",
 WLD_MTR$,"Imports of goods and services, Constant 2015 prices",bln USD
-WLD_MTR$_0,"Imports of goods and services, Constant 2015 prices",bln USD
-WLD_MTR$_A,"Imports of goods and services, Constant 2015 prices shock",
 WLD_OILC,Oil consumption,Exojoules
-WLD_OILC_0,Oil consumption,Exojoules
-WLD_OILC_A,Oil consumption shock,
 WLD_PC,"Price of coal,  Asian marker price",USD
-WLD_PC_0,"Price of coal,  Asian marker price",USD
-WLD_PC_A,"Price of coal,  Asian marker price shock",
 WLD_PE,"Domestic price of energy, inclusive of net carbon tax",USD per mln kJ
-WLD_PE_0,"Domestic price of energy, inclusive of net carbon tax",USD per mln kJ
-WLD_PE_A,"Domestic price of energy, inclusive of net carbon tax shock",
 WLD_PG,"Price of natural gas, LNG Japan CIF",
-WLD_PG_0,"Price of natural gas, LNG Japan CIF",
-WLD_PG_A,"Price of natural gas, LNG Japan CIF shock",
 WLD_POIL,"Global price of oil,  Brent crude",
-WLD_POIL_0,"Global price of oil,  Brent crude",
-WLD_POIL_A,"Global price of oil,  Brent crude shock",
 WLD_POPT,Total population,1000s
-WLD_POPT_0,Total population,1000s
-WLD_POPT_A,Total population shock,
 WLD_POPWA,Population aged 15-64,1000s
-WLD_POPWA_0,Population aged 15-64,1000s
-WLD_POPWA_A,Population aged 15-64 shock,
 WLD_PR,Global average price of renewable energy,
-WLD_PR_0,Global average price of renewable energy,
-WLD_PR_A,Global average price of renewable energy shock,
 WLD_RC,"Consumption of non-fossil fuel energy (nuclear, hydro and renewables)",Exojoules
-WLD_RC_0,"Consumption of non-fossil fuel energy (nuclear, hydro and renewables)",Exojoules
-WLD_RC_A,"Consumption of non-fossil fuel energy (nuclear, hydro and renewables) shock",
 WLD_TECHL,Labour augmenting technical progress trend indexed to GDP per working age population,index
-WLD_TECHL_0,Labour augmenting technical progress trend indexed to GDP per working age population,index
-WLD_TECHL_A,Labour augmenting technical progress trend indexed to GDP per working age population shock,
 WLD_XTN$,"Exports of goods and services,  Current prices",bln USD
-WLD_XTN$_0,"Exports of goods and services,  Current prices",bln USD
-WLD_XTN$_A,"Exports of goods and services,  Current prices shock",
 WLD_XTR$,"Exports of goods and services, Constant 2015 prices",bln USD
-WLD_XTR$_0,"Exports of goods and services, Constant 2015 prices",bln USD
-WLD_XTR$_A,"Exports of goods and services, Constant 2015 prices shock",
 WLD_YEN$,"Gross Domestic Product (GDP), Current prices",bln USD
-WLD_YEN$_0,"Gross Domestic Product (GDP), Current prices",bln USD
-WLD_YEN$_A,"Gross Domestic Product (GDP), Current prices shock",
 WLD_YER$,"Gross Domestic Product (GDP), Constant 2015 prices",bln USD
-WLD_YER$_0,"Gross Domestic Product (GDP), Constant 2015 prices",bln USD
-WLD_YER$_A,"Gross Domestic Product (GDP), Constant 2015 prices shock",
 WLD_YFT$,"Trend output, Constant 2015 prices",bln USD
-WLD_YFT$_0,"Trend output, Constant 2015 prices",bln USD
-WLD_YFT$_A,"Trend output, Constant 2015 prices shock",
 USA_INFT,Inflation target (not necessarily explicit),percent
-USA_INFT_0,Inflation target (not necessarily explicit),percent
-USA_INFT_A,Inflation target (not necessarily explicit) shock,
 USA_INT,Short-term interest rate,percent per annum
-USA_INT_0,Short-term interest rate,percent per annum
-USA_INT_A,Short-term interest rate shock,

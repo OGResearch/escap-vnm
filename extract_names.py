@@ -62,4 +62,3 @@ with open("func-names.json", "w+") as fid:
     _js.dump(tuple(m_func_names), fid, indent=4)
 
 
-

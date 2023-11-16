@@ -1,0 +1,12 @@
+Parameter,Baseline
+# Equation for hic,
+c0_hic,0.5
+c1_hic,0.1
+c2_hic,0.4
+c3_hic,0.375
+c4_hic,0.5
+c5_hic,0.6
+c6_hic,0.01
+# Equation for lti,
+c0_lti,0.5
+c1_lti,1
