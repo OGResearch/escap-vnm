@@ -1,5 +1,4 @@
 
-
 import irispie as _ir
 import scipy as _sp
 import numpy as _np
@@ -7,6 +6,10 @@ import copy as _cp
 import time as _ti
 import sys as _sy
 import utils as _ut
+
+
+_ir.min_irispie_version_required("0.22.0", )
+
 
 #
 # Read input data
