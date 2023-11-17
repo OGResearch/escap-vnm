@@ -1,0 +1,139 @@
+[ 
+    {"transformations":
+    [
+        {
+            "transformation":"pct_dev",
+            "expression": "100*(s1['variable']/s0['variable'])-100"
+        },
+        {
+            "transformation":"level",
+            "expression": "100*(s1['variable'])"
+        },
+        {
+            "transformation":"pp_dev",
+            "expression": "s1['variable'] - s0['variable']"
+        },
+        {
+            "transformation":"pp_dev_cpi",
+            "expression": "pct(s1['variable']) - pct(s0['variable'])"
+        },
+        {
+            "transformation":"level_cmp",
+            "expression": "(s1['variable'] | s0['variable'])"
+        }
+    ]
+    },
+    {"figures":
+    [
+       {
+        "group_title": "Real economic activity",
+        "charts": 
+            [
+                {
+                    "title": "Real GDP",
+                    "variable":"yer",
+                    "transformation": "level"
+                }, 
+                {
+                    "title": "Real GDP, % difference from baseline",
+                    "variable":"yer",
+                    "transformation": "pct_dev"
+                },
+                {
+                    "title": "Real Consumption, % difference from baseline",
+                    "variable":"pcr",
+                    "transformation": "pct_dev"
+                },
+                {
+                    "title": "Real Investment, % difference from baseline",
+                    "variable":"itr",
+                    "transformation": "pct_dev"
+                },
+                {
+                    "title": "Inflation, percantage point difference",
+                    "variable":"hic",
+                    "transformation": "pp_dev_cpi"
+                }
+            ]
+        },
+        {
+        "group_title": "Environmental variables",
+        "charts": 
+            [
+                {
+                    "title": "CO2 Emission, % difference from baseline",
+                    "variable":"co2",
+                    "transformation": "pct_dev"                
+                },
+                {
+                    "title": "Pollution (PM2.5), % difference from baseline",
+                    "variable":"pm25",
+                    "transformation": "pct_dev"      
+                },
+                {
+                    "title": "Energy Efficiency Index, % difference from baseline",
+                    "variable":"eff",
+                    "transformation": "pct_dev" 
+                },
+                {
+                    "title": "Energy Consumption, % difference from baseline",
+                    "variable":"ec",
+                    "transformation": "pct_dev" 
+                },
+                {
+                    "title": "Renewable energy consumption, % difference from baseline",
+                    "variable":"rc",
+                    "transformation": "pct_dev" 
+                },
+                {
+                    "title": "Coal consumption, % difference from baseline",
+                    "variable":"coalc",
+                    "transformation": "pct_dev" 
+                }
+            ]
+        },
+        {
+        "group_title": "Fiscal situation",
+        "charts": 
+            [
+                {
+                    "title": "Fiscal Balance (% of GDP)",
+                    "variable":"glnratio",
+                    "transformation": "level_cmp" 
+                },
+                {
+                    "title": "Public Debt (% of GDP)",
+                    "variable":"gdnratio",
+                    "transformation": "level_cmp" 
+                },
+                {
+                    "title": "Government Expenditure, % difference from baseline",
+                    "variable":"exp",
+                    "transformation": "pct_dev" 
+                },
+                {
+                    "title": "Government Revenue, % difference from baseline",
+                    "variable":"rev",
+                    "transformation": "pct_dev" 
+                }
+            ]
+        },
+        {
+            "group_title": "Social situation",
+            "charts": 
+                [
+                    {
+                        "title": "Gini Coefficient, % difference from baseline ",
+                        "variable":"gini_disp",
+                        "transformation": "pct_dev" 
+                    },
+                    {
+                        "title": "Poverty Headcount Ratio (% of population), percantage point difference",
+                        "variable":"head55",
+                        "transformation": "pp_dev" 
+                    }
+                ]
+        }
+    ]
+    }
+]
