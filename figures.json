@@ -7,7 +7,7 @@
         },
         {
             "transformation":"level",
-            "expression": "100*(s1['variable'])"
+            "expression": "100*log(s1['variable'])"
         },
         {
             "transformation":"pp_dev",
