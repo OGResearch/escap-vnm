@@ -1,1 +1,11 @@
 .trash
+.venv
+.vscode
+s0.csv
+s1.csv
+s2.csv
+s_scen2_1.csv
+s_scen2_2.csv
+s_scen3.csv
+s_scen4.csv
+__pycache__

@@ -10,3 +10,5 @@ c6_hic,0.01
 # Equation for lti,
 c0_lti,0.5
 c1_lti,1
+# Random parameter,
+c0_xtn,21697.5675
