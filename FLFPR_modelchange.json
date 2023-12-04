@@ -64,7 +64,7 @@
                 "history": "lfnm = lfn - lfnf",
                 "fcast": "lfnm = lrxm  * popwam"
                 },
-            "educ": 
+            "skrat": 
                 {
                 "description": "Skill distribution (High skilled / low skilled labor force)",
                 "history": "exogenous",
