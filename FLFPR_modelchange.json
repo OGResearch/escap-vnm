@@ -1,0 +1,100 @@
+{
+    "model_change": 
+    {
+        "description_short" : "Decompose labor force participation rate into female and male LFPR formulas",
+        "description_long" : 
+                {
+               "lrxf":"Female LFPR formula is a U-shape forcast which normalizes at a steady state and forecasted by per capita gdp and education",
+               "lrxm": "Male LFPR formula is the same as the total LFPR formula was in the original model"
+                },    
+        "new_variables": 
+        {
+            "popwaf": 
+                {
+                "description": "Female Working Age Population",
+                "history": "exogenous",
+                "fcast": "exogenous"
+                },
+            "popwam": 
+                {
+                "description": "Male Working Age Population",
+                "history": "popwam = popwa - popwaf",
+                "fcast": "popwam= popwa - popwaf"
+                },
+            "lrxf": 
+                {
+                "description": "Female Labor Force Participation Rate",
+                "history": "exogenous",
+                "fcast": 
+                    {"if((yer*1000/popt)>c5_lrxf AND (ss_lrxf - lrxf(-1)) < 0.02) = TRUE": 
+                    "c0_lrxf*lrxf(-1) + (1-c0_lrxf)*(ss_lrxf)",
+                    "else": 
+                    "c0_lrxf*lrxf(-1) + (1-c0_lrxf)*(c1_lrxf+c2_lrxf*log(yer*1000/popt)+c3_lrxf*log(yer*1000/popt)^2+c4_lrxf*educ)"
+                    },
+                "coefficients":
+                    {
+                    "c0_lrxf": "0.65672",
+                    "c1_lrxf": "4.4441532",
+                    "c2_lrxf": "-0.7084184",
+                    "c3_lrxf": "0.0345780",
+                    "c4_lrxf": "0.005",
+                    "c5_lrxf": "37609",
+                    "ss_lrxf": "0.87"
+                    }
+                },
+            "lrxm": 
+                {
+                "description": "Male Labor Force Participation Rate",
+                "history": "lrxm = lfnm / popwam *100 ",
+                "fcast": "lrxm(-1)  + beta1  * log(yer(-1)  / yft(-1)) + lrx_eviews",
+                "coefficients":
+                    {
+                    "beta1": "0.03"
+                    }
+                },
+            "lfnf": 
+                {
+                "description": "Female Labor Force",
+                "history": "lfnf = lrxf  * popwaf",
+                "fcast": "lfnf = lrxf  * popwaf"
+                },
+            "lfnm": 
+                {
+                "description": "Male Labor Force",
+                "history": "lfnm = lfn - lfnf",
+                "fcast": "lfnm = lrxm  * popwam"
+                },
+            "skrat": 
+                {
+                "description": "Skill distribution (High skilled / low skilled labor force)",
+                "history": "exogenous",
+                "fcast": "exogenous"
+                }
+        },
+      "modified_variables": 
+        {
+        "lfn": 
+            {
+            "description": "Labor Force",
+            "history": "lfn`lhs_log === lrx * popwa",
+            "fcast_old": "lfn`lhs_log === lrx * popwa",
+            "fcast": "lfn === lfnf + lfnm" 
+            },
+        "lrx": 
+            {
+            "description": "Labor Force Participation Rate",
+            "history": "exogenous",
+            "fcast_old": "lrx`lhs - res_lrx`res = lrx[-1] + 0.03 * log(yer[-1] / yft[-1]) + lrx_eviews",
+            "fcast": "lrx`lhs = lfn / popwa * 100"
+            },
+
+        "lnnf": 
+            {
+            "description": "Female Employment",
+            "history": "exogenous",
+            "fcast_old": "diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lnn)",
+            "fcast": "diff_log(lnnf`lhs_log) = diff_log(lfnf) - 0.1 * (log(lnnf[-1]) - log(lfnf[-1])) + 0.3 * (diff_log(yer[-1]))"
+            }
+        }
+    }
+}

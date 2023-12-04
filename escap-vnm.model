@@ -32,6 +32,54 @@
     usa_int
     usa_inft
 
+    eff_eviews
+    climloss_eviews
+    co2_eviews
+    ctax_eviews
+    ec_eviews
+    expe_eviews
+    exph_eviews
+    expsp_eviews
+    exr_eviews
+    gasc_eviews
+    gcarb_eviews
+    gcom_eviews
+    gcr_eviews
+    gdfxsh_eviews
+    gdn_eviews
+    goth_eviews
+    gtrade_eviews
+    hic_eviews
+    igr_eviews
+    ipr_eviews
+    itax_eviews
+    lives_eviews
+    lrx_eviews
+    lnn_eviews
+    mtr_eviews
+    ogc_eviews
+    ogi_eviews
+    oilc_eviews
+    oms_eviews
+    pcr_eviews
+    pm25_eviews
+    prem_eviews
+    prof_eviews
+    rc_eviews
+    rpdi_eviews
+    scr_eviews
+    taxr_eviews
+    techl_eviews
+    user_eviews
+    xtn_eviews
+    yft_eviews
+    rel_red_eviews
+    can_eviews
+    xtd_S_eviews
+    xtdno_S_eviews
+    xtr_eviews
+    lnnf_eviews
+
 !log-variables
 
     !list(`lhs_log)
@@ -48,7 +96,8 @@
    diff_log(hic`lhs_log) - res_hic`res =
        + c0_hic`par * diff_log(hic[-1]) + c1_hic`par * diff_log(mtd) + c2_hic`par * (inft / 100)
        + c3_hic`par * (yer / yft - yer[-1] / yft[-1]) + diff_log(1 + itaxr)
-       + c4_hic`par * diff_log(1 + gcarb / (c5_hic`par * yen[-1])) + c6_hic`par * (prem - prem[-1]) / 100;
+       + c4_hic`par * diff_log(1 + gcarb / (c5_hic`par * yen[-1])) + c6_hic`par * (prem - prem[-1]) / 100
+       + hic_eviews;
 
     yed`lhs * exp(-res_yed`res) = yed[-1] * hic / hic[-1];
 
@@ -56,21 +105,21 @@
 
     diff(lti`lhs) === c0_lti`par * (int - int[-1]) + c1_lti`par * (prem - prem[-1]) / 100;
 
-    prem`lhs - res_prem`res = prem[-1] * (1 + 0 * (gdnratio[-1] - gdnratio[-2]) / 100 + 0.015 * ((hic / hic[-1] - 1) * 100 - inft));
+    prem`lhs - res_prem`res = prem[-1] * (1 + 0 * (gdnratio[-1] - gdnratio[-2]) / 100 + 0.015 * ((hic / hic[-1] - 1) * 100 - inft)) + prem_eviews;
 
-    diff_log(lnn`lhs_log) - res_lnn`res = diff_log(lfn) - 0.1 * (log(lnn[-1]) - log(lfn[-1])) + 0.3 * (diff_log(yer[-1]));
+    diff_log(lnn`lhs_log) - res_lnn`res = diff_log(lfn) - 0.1 * (log(lnn[-1]) - log(lfn[-1])) + 0.3 * (diff_log(yer[-1])) + lnn_eviews;
 
-    diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lnn);
+    # diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lnn);
 
-    taxr`lhs - res_taxr`res = taxr[-1] + 0.1 * (glnt[-1] - glnratio[-1]) / 100 * yen[-1] / ((labsh[-1] * 0.5 * (yer[-2] + gdi[-2]) * yed[-2] * (lnn[-1] / lnn[-2] + techl[-1] - techl[-2])) + remit[-1] + expsp[-1]) * solv;
+    taxr`lhs - res_taxr`res = taxr[-1] + 0.1 * (glnt[-1] - glnratio[-1]) / 100 * yen[-1] / ((labsh[-1] * 0.5 * (yer[-2] + gdi[-2]) * yed[-2] * (lnn[-1] / lnn[-2] + techl[-1] - techl[-2])) + remit[-1] + expsp[-1]) * solv + taxr_eviews;
 
     ctaxr`lhs - res_ctaxr`res = ctaxr[-1] + 0.1 * (glnt[-1] - glnratio[-1]) / 100 * yen[-1] / (prof[-1]) * solv;
 
-    ogc`lhs_log * exp(-res_ogc`res) = ogc[-1] * (yed / yed[-1]);
+    ogc`lhs_log * exp(-res_ogc`res) = ogc[-1] * (yed / yed[-1]) + ogc_eviews;
 
-    user`lhs - res_user`res = (lti - inft + dep * 100) / (1 - ctaxr) + 0.5 * (gcarb / yen[-1]) * 100;
+    user`lhs - res_user`res = (lti - inft + dep * 100) / (1 - ctaxr) + 0.5 * (gcarb / yen[-1]) * 100 + user_eviews;
 
-    xtn`lhs_log === xtd_S * exr / 21697.5675 * xtr;
+    xtn`lhs_log === xtd_S * exr / c0_xtn`par * xtr + xtn_eviews;
 
     yen`lhs_log === yer * yed;
 
@@ -97,39 +146,39 @@
     # FIXME
     scr`lhs - res_scr`res =
         + scr[-1]
-        + ((scr[-1]^2)^0.5) * ((yft[-1] / yer[-1] - yft[-2] / yer[-2]));
+        + ((scr[-1]^2)^0.5) * ((yft[-1] / yer[-1] - yft[-2] / yer[-2])) + scr_eviews;
 
     itr`lhs_log === igr + ipr;
 
     yer`lhs_log === pcr + gcr + itr + scr + xtr - mtr;
 
     # FIXME
-    prof`lhs === (yen - itax) * (1 - labsh);
+    prof`lhs === (yen - itax) * (1 - labsh) + prof_eviews;
 
     gdi`lhs_log === yer - xtr + mtr + xtn / ((yen - xtn + mtn) / (yer - xtr + mtr)) - mtn / ((yen - xtn + mtn) / (yer - xtr + mtr));
 
-    rpdi`lhs_log === labsh * 0.5 * (yer[-1] + gdi[-1]) * yed[-1] / hic[-1] * (lnn / lnn[-1] + techl - techl[-1]) + remit / hic + expsp / hic - tax / hic;
+    rpdi`lhs_log === (labsh * 0.5 * (yer[-1] + gdi[-1]) * yed[-1] / hic[-1] * (lnn / lnn[-1] + techl - techl[-1]) + remit / hic + expsp / hic - tax / hic) + rpdi_eviews;
 
-    diff_log(yft`lhs_log) - res_yft`res = (1 - 0.0459438948322928 - labsh) * diff_log(k[-1] / lfn[-1]) + (1 - 0.0459438948322928) * diff_log(lfn) + labsh * diff(techl) + 0.0459438948322928 * (diff_log(ec) + diff(eff)) - diff_log(climloss) * 0.00765424499961214;
+    diff_log(yft`lhs_log) - res_yft`res = (1 - 0.0459438948322928 - labsh) * diff_log(k[-1] / lfn[-1]) + (1 - 0.0459438948322928) * diff_log(lfn) + labsh * diff(techl) + 0.0459438948322928 * (diff_log(ec) + diff(eff)) - diff_log(climloss) * 0.00765424499961214 + yft_eviews;
 
     k`lhs_log === k[-1] * (1 - dep) + itr;
 
     diff_log(mtd`lhs_log) - res_mtd`res = (1 - oms) * (diff_log(cmud) + diff_log(exr)) + oms * (diff_log(wld_poil) + diff_log(exr));
 
-    diff_log(xtd_S`lhs_log) === (1 - oxs) * diff_log(xtdno_S) + oxs * diff_log(wld_poil);
+    diff_log(xtd_S`lhs_log) === (1 - oxs) * diff_log(xtdno_S) + oxs * diff_log(wld_poil) + xtd_S_eviews;
 
     inft`lhs - res_inft`res = 0.95 * inft[-1] + 0.05 * 2;
 
     oxs`lhs - res_oxs`res = oxs[-1];
 
-    oms`lhs - res_oms`res = oms[-1] * ((oilc[-1] * wld_poil[-1] * exr[-1] / mtn[-1]) / (oilc[-2] * wld_poil[-2] * exr[-2] / mtn[-2]))^0.25;
+    oms`lhs - res_oms`res = oms[-1] * ((oilc[-1] * wld_poil[-1] * exr[-1] / mtn[-1]) / (oilc[-2] * wld_poil[-2] * exr[-2] / mtn[-2]))^0.25 + oms_eviews;
 
     cxs`lhs - res_cxs`res = cxs[-1];
 
     finc`lhs - res_finc`res = finc[-1];
 
     # FIXME
-    can`lhs === xtn / exr - mtn / exr + remit / exr + canoth;
+    can`lhs === xtn / exr - mtn / exr + remit / exr + canoth + can_eviews;
 
     canratio`lhs === can / yen_S * 100;
 
@@ -138,11 +187,11 @@
 
     gint`lhs - res_gint`res = gint[-1] + 1 / 5 * (lti - lti[-1]);
 
-    gdn`lhs_log * exp(-res_gdn`res) = gdn[-1] * (gdfxsh * (exr / exr[-1]) + (1 - gdfxsh)) - gln;
+    gdn`lhs_log * exp(-res_gdn`res) = gdn[-1] * (gdfxsh * (exr / exr[-1]) + (1 - gdfxsh)) - glnratio * yen/ 100 + gdn_eviews;
 
     gdnratio`lhs === gdn / yen * 100;
 
-    gdfxsh`lhs - res_gdfxsh`res = (gdfxsh[-1] * (exr / exr[-1])) / (gdfxsh[-1] * (exr / exr[-1]) + 1 - gdfxsh[-1]);
+    gdfxsh`lhs - res_gdfxsh`res = (gdfxsh[-1] * (exr / exr[-1])) / (gdfxsh[-1] * (exr / exr[-1]) + 1 - gdfxsh[-1]) + gdfxsh_eviews;
 
     lock`lhs - res_lock`res = 0;
 
@@ -153,21 +202,21 @@
 
     itaxr`lhs - res_itaxr`res = itaxr[-1];
 
-    gtrade`lhs_log === gtrader * xtn;
+    gtrade`lhs_log === gtrader * xtn + gtrade_eviews;
 
     rev`lhs_log === tax + ctax + itax + gtrade + revg + gcarb + gcom + goth;
 
     tax`lhs_log === taxr * (labsh * 0.5 * (yer[-1] + gdi[-1]) * yed[-1] * (lnn / lnn[-1] + techl - techl[-1]) + remit + expsp);
 
     # FIXME
-    ctax`lhs === ctaxr * prof;
+    ctax`lhs === ctaxr * prof + ctax_eviews;
 
     # FIXME
-    itax`lhs === itaxr * (pcr * hic / 1);
+    itax`lhs === itaxr * (pcr * hic / 1) + itax_eviews;
 
     enab`lhs - res_enab`res = enab[-1];
 
-    gcarb`lhs === enab * gcarbr * co2 * exr / 1000;
+    gcarb`lhs === enab * gcarbr * co2 * exr / 1000 + gcarb_eviews;
 
     # FIXME
     gcarbb`lhs - res_gcarbb`res = gcarbb[-1];
@@ -175,9 +224,9 @@
     # FIXME
     gcarbrb`lhs - res_gcarbrb`res = gcarbrb[-1];
 
-    gcom`lhs_log * exp(-res_gcom`res) = gcom[-1] * (oilc / (oilc + gasc + coalc) * (wld_oilc * wld_poil) / (wld_oilc[-1] * wld_poil[-1]) + gasc / (oilc + gasc + coalc) * (wld_gasc * wld_pg) / (wld_gasc[-1] * wld_pg[-1]) + coalc / (oilc + gasc + coalc) * (wld_coalc * wld_pc) / (wld_coalc[-1] * wld_pc[-1]));
+    gcom`lhs_log * exp(-res_gcom`res) = gcom[-1] * (oilc / (oilc + gasc + coalc) * (wld_oilc * wld_poil) / (wld_oilc[-1] * wld_poil[-1]) + gasc / (oilc + gasc + coalc) * (wld_gasc * wld_pg) / (wld_gasc[-1] * wld_pg[-1]) + coalc / (oilc + gasc + coalc) * (wld_coalc * wld_pc) / (wld_coalc[-1] * wld_pc[-1])) + gcom_eviews;
 
-    goth`lhs_log * exp(-res_goth`res) = goth[-1];
+    goth`lhs_log * exp(-res_goth`res) = goth[-1] + goth_eviews;
 
     exp`lhs_log === expe + exph + expsp + ogc + ogi + gip;
 
@@ -187,11 +236,11 @@
 
     expspb`lhs - res_expspb`res = expspb[-1];
 
-    expe`lhs_log * exp(-res_expe`res) = expeb * yed / yed[-1] + (sharee + sharex) * (gcarb - gcarbb);
+    expe`lhs_log * exp(-res_expe`res) = expeb * yed / yed[-1] + (sharee + sharex) * (gcarb - gcarbb) + expe_eviews;
 
-    exph`lhs_log * exp(-res_exph`res) = exphb * yed / yed[-1] + shareh * (gcarb - gcarbb);
+    exph`lhs_log * exp(-res_exph`res) = exphb * yed / yed[-1] + shareh * (gcarb - gcarbb) + exph_eviews;
 
-    expsp`lhs_log * exp(-res_expsp`res) = expspb * yed / yed[-1] + sharesp * (gcarb - gcarbb);
+    expsp`lhs_log * exp(-res_expsp`res) = expspb * yed / yed[-1] + sharesp * (gcarb - gcarbb) + expsp_eviews;
 
     sharesp`lhs - res_sharesp`res = 0;
 
@@ -201,18 +250,18 @@
 
     sharex`lhs - res_sharex`res = 0;
 
-    diff_log(ogi`lhs_log) - res_ogi`res = diff_log(yed);
+    diff_log(ogi`lhs_log) - res_ogi`res = diff_log(yed) + ogi_eviews;
 
-    gcr`lhs_log * exp(-res_gcr`res) = gcr[-1] + (ogc / yed - ogc[-1] / yed[-1]) + 0.75 * ((exph) / yed - (exph[-1]) / yed[-1]) + 0.5 * ((expe) / yed - (expe[-1]) / yed[-1]);
+    gcr`lhs_log * exp(-res_gcr`res) = gcr[-1] + (ogc / yed - ogc[-1] / yed[-1]) + 0.75 * ((exph) / yed - (exph[-1]) / yed[-1]) + 0.5 * ((expe) / yed - (expe[-1]) / yed[-1]) + gcr_eviews;
 
-    igr`lhs_log * exp(-res_igr`res) = igr[-1] + (ogi / yed - ogi[-1] / yed[-1]) + 0.25 * ((exph) / yed - (exph[-1]) / yed[-1]) + 0.5 * ((expe) / yed - (expe[-1]) / yed[-1]);
+    igr`lhs_log * exp(-res_igr`res) = igr[-1] + (ogi / yed - ogi[-1] / yed[-1]) + 0.25 * ((exph) / yed - (exph[-1]) / yed[-1]) + 0.5 * ((expe) / yed - (expe[-1]) / yed[-1]) + igr_eviews;
 
-    gip`lhs_log * exp(-res_gip`res) = (gip[-1] + (gdn[-1] - gdn[-2]) * gint[-1] / 100 + gdn[-6] / 5 * (gint[-1] / 100 - gint[-6] / 100)) * (gdfxsh * (exr / exr[-1]) + (1 - gdfxsh));
+    gip`lhs_log * exp(-res_gip`res) = (gip[-1] + (gdnratio[-1]*yen[-1]/100 - gdnratio[-2]*yen[-2]/100) * gint[-1] / 100 + gdnratio[-6]*yen[-6]/100 / 5 * (gint[-1] / 100 - gint[-6] / 100)) * (gdfxsh * (exr / exr[-1]) + (1 - gdfxsh));
 
     # FIXME
-    gln`lhs === rev - exp;
+    # gln`lhs === rev - exp;
 
-    glnratio`lhs === gln / yen * 100;
+    glnratio`lhs === (rev - exp) / yen * 100;
 
     glnt`lhs - res_glnt`res = glnt[-1] * 0.95 - 0.05 * 2;
 
@@ -220,9 +269,9 @@
 
     labsh`lhs - res_labsh`res = labsh[-1];
 
-    lfn`lhs_log === lrx * popwa;
+    # lfn`lhs_log === lrx * popwa;
 
-    lrx`lhs - res_lrx`res = lrx[-1] + 0.03 * log(yer[-1] / yft[-1]);
+    # lrx`lhs - res_lrx`res = lrx[-1] + 0.03 * log(yer[-1] / yft[-1]) + lrx_eviews;
 
     urx`lhs === (1 - lnn / lfn) * 100;
 
@@ -236,30 +285,30 @@
 
     head55`lhs === head55[-1] * (lognorm_cdf(5.5, log(ybar) - 0.5 * (sdli^2), sdli) * 100) / (lognorm_cdf(5.5, log(ybar[-1]) - 0.5 * (sdli[-1]^2), sdli[-1]) * 100);
 
-    diff_log(climloss`lhs_log) - res_climloss`res = - 0.05 * (log(climloss[-1]) + 2.5 * sharee * (gcarb[-1] - gcarbb[-1]) / yen[-1]);
+    diff_log(climloss`lhs_log) - res_climloss`res = - 0.05 * (log(climloss[-1]) + 2.5 * sharee * (gcarb[-1] - gcarbb[-1]) / yen[-1]) + climloss_eviews;
 
-    lives`lhs_log - res_lives`res = lives[-1] * ((climloss / climloss[-1] - 1) * 0.5 + 1);
+    lives`lhs_log - res_lives`res = lives[-1] * ((climloss / climloss[-1] - 1) * 0.5 + 1) + lives_eviews;
 
     solv`lhs - res_solv`res = 0;
 
-    diff_log(xtr`lhs_log) - res_xtr`res = diff_log(wdr) + (1 - cxs) * (-0.301505159676227 * diff_log(xtdno_S / cxud)) - 0.77 * 0.0547452906141471 * wld_lock / 100;
+    diff_log(xtr`lhs_log) - res_xtr`res = diff_log(wdr) + (1 - cxs) * (-0.301505159676227 * diff_log(xtdno_S / cxud)) - 0.77 * 0.0547452906141471 * wld_lock / 100 + xtr_eviews;
 
-    diff(techl`lhs) - res_techl`res = diff(wld_techl) + 0.22 * (exph[-1] / yen[-1]) - 0.029 * (exph[-1] / yen[-1])^2 - 0.0158384051706473 * diff(gini_disp) - 0.0033 * diff(pm25);
+    diff(techl`lhs) - res_techl`res = diff(wld_techl) + 0.22 * (exph[-1] / yen[-1]) - 0.029 * (exph[-1] / yen[-1])^2 - 0.0158384051706473 * diff(gini_disp) - 0.0033 * diff(pm25) + techl_eviews;
 
-    rel_red`lhs - res_rel_red`res = 5.93384579868656 + 83.1449704585364 * (expsp / yen);
+    rel_red`lhs - res_rel_red`res = 5.93384579868656 + 83.1449704585364 * (expsp / yen) + rel_red_eviews;
 
     diff_log(gini_disp`lhs_log) - res_gini_disp`res = 0.907761585004173 * diff_log(1 - rel_red / 100) - 0.000185608758149429 * (finc - finc[-1]);
 
-    diff_log(pcr`lhs_log) - res_pcr`res = 0.0193281154615433 - 0.1 * (log(pcr[-1]) - log(rpdi[-1]) - 0.0179973059677375 * (finc[-1])) + 0.3 * diff_log(rpdi) + (1 - 0.3) * diff_log(popt) - 0.1 * (diff_log(hic) - inft / 100) - 0.239704 * lock / 100 - 0.49 * 0.239704 * lock[-1] / 100 + 0.1 * (log(yft[-1]) - log(yer[-1]));
+    diff_log(pcr`lhs_log) - res_pcr`res = 0.0193281154615433 - 0.1 * (log(pcr[-1]) - log(rpdi[-1]) - 0.0179973059677375 * (finc[-1])) + 0.3 * diff_log(rpdi) + (1 - 0.3) * diff_log(popt) - 0.1 * (diff_log(hic) - inft / 100) - 0.239704 * lock / 100 - 0.49 * 0.239704 * lock[-1] / 100 + 0.1 * (log(yft[-1]) - log(yer[-1])) + pcr_eviews;
 
 ############
-    diff_log(ipr`lhs_log) - res_ipr`res = - 0.150258968731245 - 0.1 * (log(ipr[-1] / yft[-1]) + 0.01 * user[-1] - 0.00305369690382778 * finc[-1]) + 0.4 * diff_log(pcr + gcr[-1] + igr[-1] + xtn / yed) + 0.2 * diff_log(ipr[-1]) - 0.002 * (user - user[-1]) - (0 * 0.0341636664135161 + 0.26 * 0.0547452906141471 + 0.06 * (1 - 0.0341636664135161 - 0.0547452906141471)) * lock / 100 - 0.49 * (0 * 0.0341636664135161 + 0.26 * 0.0547452906141471 + 0.06 * (1 - 0.0341636664135161 - 0.0547452906141471)) * lock[-1] / 100 + 0.1 * (log(yft[-1]) - log(yer[-1]));
+    diff_log(ipr`lhs_log) - res_ipr`res = - 0.150258968731245 - 0.1 * (log(ipr[-1] / yft[-1]) + 0.01 * user[-1] - 0.00305369690382778 * finc[-1]) + 0.4 * diff_log(pcr + gcr[-1] + igr[-1] + xtn / yed) + 0.2 * diff_log(ipr[-1]) - 0.002 * (user - user[-1]) - (0 * 0.0341636664135161 + 0.26 * 0.0547452906141471 + 0.06 * (1 - 0.0341636664135161 - 0.0547452906141471)) * lock / 100 - 0.49 * (0 * 0.0341636664135161 + 0.26 * 0.0547452906141471 + 0.06 * (1 - 0.0341636664135161 - 0.0547452906141471)) * lock[-1] / 100 + 0.1 * (log(yft[-1]) - log(yer[-1])) + ipr_eviews;
 
-    diff_log(mtr`lhs_log) - res_mtr`res = 0.0529148910097333 - 0.145873445385936 * (log(mtr[-1]) - log(pcr[-1] + itr[-1] + gcr[-1] + xtr[-1]) + log(yft[-1] / yer[-1]) + 0.122003554004898 * log(cmud[-1] * exr[-1] / yed[-1]) - 0.25 * oms * log(oilc[-1])) + 0.604532341731043 * diff_log(xtr) + 0.279148234829658 * diff_log(pcr) + 0.00956584350773259 * diff_log(ipr) + 0.00134915694086212 * diff_log(gcr + igr);
+    diff_log(mtr`lhs_log) - res_mtr`res = 0.0529148910097333 - 0.145873445385936 * (log(mtr[-1]) - log(pcr[-1] + itr[-1] + gcr[-1] + xtr[-1]) + log(yft[-1] / yer[-1]) + 0.122003554004898 * log(cmud[-1] * exr[-1] / yed[-1]) - 0.25 * oms * log(oilc[-1])) + 0.604532341731043 * diff_log(xtr) + 0.279148234829658 * diff_log(pcr) + 0.00956584350773259 * diff_log(ipr) + 0.00134915694086212 * diff_log(gcr + igr) + mtr_eviews;
 
-    xtdno_S`lhs_log * exp(-res_xtdno_S`res) = xtdno_S[-1] * (0.447952471408143 * (diff_log(yed[-1] / exr[-1]) + 1) + (1 - 0.447952471408143) * (diff_log(cxud[-1]) + 1)) * (1 + gtrader) / (1 + gtrader[-1]);
+    xtdno_S`lhs_log * exp(-res_xtdno_S`res) = xtdno_S[-1] * (0.447952471408143 * (diff_log(yed[-1] / exr[-1]) + 1) + (1 - 0.447952471408143) * (diff_log(cxud[-1]) + 1)) * (1 + gtrader) / (1 + gtrader[-1]) + xtdno_S_eviews;
 
-    diff_log(co2`lhs_log) - res_co2`res = diff_log(95.4481515280905 * coalc + 57.2996721711077 * gasc + 67.4268963948279 * oilc) - 0.034 * (log(co2[-1]) - log(95.4481515280905 * coalc[-1] + 57.2996721711077 * gasc[-1] + 67.4268963948279 * oilc[-1]) + 0.0017 * (sharee * (gcarbr[-1] - gcarbrb[-1])));
+    diff_log(co2`lhs_log) - res_co2`res = diff_log(95.4481515280905 * coalc + 57.2996721711077 * gasc + 67.4268963948279 * oilc) - 0.034 * (log(co2[-1]) - log(95.4481515280905 * coalc[-1] + 57.2996721711077 * gasc[-1] + 67.4268963948279 * oilc[-1]) + 0.0017 * (sharee * (gcarbr[-1] - gcarbrb[-1]))) + co2_eviews;
 
     diff_log(pr`lhs_log) - res_pr`res = diff_log(wld_pr) - 0.2 * (sharex * (gcarb[-1] - gcarbb[-1]) / yen[-1]);
 
@@ -273,21 +322,42 @@
 
     diff(dep`lhs) - res_dep`res = 0.0301330618085524 * diff_log(wld_co2);
 
-    diff_log(pm25`lhs_log) - res_pm25`res = 0.2 * (coalc[-1] / ec[-1] - coalc[-2] / ec[-2]) + 0.1 * (coalc[-2] / ec[-2] - coalc[-3] / ec[-3]) + 0.12 * (oilc[-1] / ec[-1] - oilc[-2] / ec[-2]) + 0.06 * (oilc[-2] / ec[-2] - oilc[-3] / ec[-3]) - 0.1 * sharex * (gcarb[-1] - gcarbb[-1]) / yen[-1];
+    diff_log(pm25`lhs_log) - res_pm25`res = 0.2 * (coalc[-1] / ec[-1] - coalc[-2] / ec[-2]) + 0.1 * (coalc[-2] / ec[-2] - coalc[-3] / ec[-3]) + 0.12 * (oilc[-1] / ec[-1] - oilc[-2] / ec[-2]) + 0.06 * (oilc[-2] / ec[-2] - oilc[-3] / ec[-3]) - 0.1 * sharex * (gcarb[-1] - gcarbb[-1]) / yen[-1] + pm25_eviews;
 
     eff`lhs - res_eff`res = eff[-1] + 0.15 * sharex * (gcarb[-1] - gcarbb[-1]) / yen[-1];
 
-    diff_log(ec`lhs_log) - res_ec`res = 0.5 * diff_log(yer) + 0.25 * diff_log(yer[-1]) + 0.15 * diff_log(yer[-2]) + 0.1 * diff_log(yer[-3]) - 0.5 * 0.160178940527757 * diff_log(pe * exr / hic) - 0.25 * 0.160178940527757 * diff_log(pe[-1] * exr[-1] / hic[-1]) - 0.15 * 0.160178940527757 * diff_log(pe[-2] * exr[-2] / hic[-2]) - 0.1 * 0.160178940527757 * diff_log(pe[-3] * exr[-3] / hic[-3]) - (eff - eff[-1]);
+    diff_log(ec`lhs_log) - res_ec`res = 0.5 * diff_log(yer) + 0.25 * diff_log(yer[-1]) + 0.15 * diff_log(yer[-2]) + 0.1 * diff_log(yer[-3]) - 0.5 * 0.160178940527757 * diff_log(pe * exr / hic) - 0.25 * 0.160178940527757 * diff_log(pe[-1] * exr[-1] / hic[-1]) - 0.15 * 0.160178940527757 * diff_log(pe[-2] * exr[-2] / hic[-2]) - 0.1 * 0.160178940527757 * diff_log(pe[-3] * exr[-3] / hic[-3]) - (eff - eff[-1]) + ec_eviews;
 
-    diff_log(gasc`lhs_log) - res_gasc`res = diff_log(ec[-1]) - 0.05 * (log(gasc[-1] / ec[-1]) + log(pg[-1] / pe[-1]));
+    diff_log(gasc`lhs_log) - res_gasc`res = diff_log(ec[-1]) - 0.05 * (log(gasc[-1] / ec[-1]) + log(pg[-1] / pe[-1])) + gasc_eviews;
 
-    diff_log(oilc`lhs_log) - res_oilc`res = diff_log(ec[-1]) - 0.05 * (log(oilc[-1] / ec[-1]) + log(poil[-1] / pe[-1]));
+    diff_log(oilc`lhs_log) - res_oilc`res = diff_log(ec[-1]) - 0.05 * (log(oilc[-1] / ec[-1]) + log(poil[-1] / pe[-1])) + oilc_eviews;
 
-    diff_log(rc`lhs_log) - res_rc`res = diff_log(ec[-1]) - 0.05 * (log(rc[-1] / ec[-1]) + log(pr[-1] / pe[-1]));
+    diff_log(rc`lhs_log) - res_rc`res = diff_log(ec[-1]) - 0.05 * (log(rc[-1] / ec[-1]) + log(pr[-1] / pe[-1])) + rc_eviews;
 
     coalc`lhs_log * exp(-res_coalc`res) = ec - gasc - oilc - rc;
 
-    exr`lhs_log * exp(-res_exr`res) = exr[-1] * ((inft - usa_inft) / 100 + 1);
+    exr`lhs_log * exp(-res_exr`res) = exr[-1] * ((inft - usa_inft) / 100 + 1) + exr_eviews;
 
+    popwaf`lhs_log * exp(-res_popwaf`res) = popwaf[-1] * popt / popt[-1];
+
+    popwam`lhs_log === popwa - popwaf;
+    
+    lrxf`lhs - res_lrxf`res = c0_lrxf`par*lrxf[-1] + (1-c0_lrxf`par) * (c1_lrxf`par + c2_lrxf`par * log(yer*1000/popt) + c3_lrxf`par * log(yer*1000/popt)^2 + c4_lrxf`par * skrat);
+
+    # lrxf`lhs - res_lrxf`res = c0_lrxf`par*lrxf[-1] + (1-c0_lrxf`par) * ss_lrxf`par;
+
+    lrxm`lhs - res_lrxm`res = lrxm[-1] + 0.03 * log(yer[-1] / yft[-1]) + lrx_eviews;
+
+    lfnf`lhs_log === lrxf * popwaf;
+
+    lfnm`lhs_log === lrxm * popwam;
+
+    lrx`lhs =  lfn / popwa; 
+
+    lfn`lhs_log === lfnf + lfnm; 
+
+    diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lfnf) - 0.1 * (log(lnnf[-1]) - log(lfnf[-1])) + 0.3 * (diff_log(yer[-1])) + lnnf_eviews;
+
+    skrat`lhs - res_skrat`res = skrat[-1];
 #}
 
