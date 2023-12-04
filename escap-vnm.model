@@ -78,6 +78,7 @@
     xtd_S_eviews
     xtdno_S_eviews
     xtr_eviews
+    lnnf_eviews
 
 !log-variables
 
@@ -108,7 +109,7 @@
 
     diff_log(lnn`lhs_log) - res_lnn`res = diff_log(lfn) - 0.1 * (log(lnn[-1]) - log(lfn[-1])) + 0.3 * (diff_log(yer[-1])) + lnn_eviews;
 
-    diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lnn);
+    # diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lnn);
 
     taxr`lhs - res_taxr`res = taxr[-1] + 0.1 * (glnt[-1] - glnratio[-1]) / 100 * yen[-1] / ((labsh[-1] * 0.5 * (yer[-2] + gdi[-2]) * yed[-2] * (lnn[-1] / lnn[-2] + techl[-1] - techl[-2])) + remit[-1] + expsp[-1]) * solv + taxr_eviews;
 
@@ -268,9 +269,9 @@
 
     labsh`lhs - res_labsh`res = labsh[-1];
 
-    lfn`lhs_log === lrx * popwa;
+    # lfn`lhs_log === lrx * popwa;
 
-    lrx`lhs - res_lrx`res = lrx[-1] + 0.03 * log(yer[-1] / yft[-1]) + lrx_eviews;
+    # lrx`lhs - res_lrx`res = lrx[-1] + 0.03 * log(yer[-1] / yft[-1]) + lrx_eviews;
 
     urx`lhs === (1 - lnn / lfn) * 100;
 
@@ -337,5 +338,26 @@
 
     exr`lhs_log * exp(-res_exr`res) = exr[-1] * ((inft - usa_inft) / 100 + 1) + exr_eviews;
 
+    popwaf`lhs_log * exp(-res_popwaf`res) = popwaf[-1] * popt / popt[-1];
+
+    popwam`lhs_log === popwa - popwaf;
+    
+    lrxf`lhs - res_lrxf`res = c0_lrxf`par*lrxf[-1] + (1-c0_lrxf`par) * (c1_lrxf`par + c2_lrxf`par * log(yer*1000/popt) + c3_lrxf`par * log(yer*1000/popt)^2 + c4_lrxf`par * skrat);
+
+    # lrxf`lhs - res_lrxf`res = c0_lrxf`par*lrxf[-1] + (1-c0_lrxf`par) * ss_lrxf`par;
+
+    lrxm`lhs - res_lrxm`res = lrxm[-1] + 0.03 * log(yer[-1] / yft[-1]) + lrx_eviews;
+
+    lfnf`lhs_log === lrxf * popwaf;
+
+    lfnm`lhs_log === lrxm * popwam;
+
+    lrx`lhs =  lfn / popwa; 
+
+    lfn`lhs_log === lfnf + lfnm; 
+
+    diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lfnf) - 0.1 * (log(lnnf[-1]) - log(lfnf[-1])) + 0.3 * (diff_log(yer[-1])) + lnnf_eviews;
+
+    skrat`lhs - res_skrat`res = skrat[-1];
 #}
 

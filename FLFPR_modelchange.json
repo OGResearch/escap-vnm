@@ -26,20 +26,20 @@
                 "description": "Female Labor Force Participation Rate",
                 "history": "exogenous",
                 "fcast": 
-                    {"if(yer*1000/popt>turning point AND (flfpr_ss(-1) - flfpr(-1)) < 2) = TRUE": 
-                    "beta1*lrxf(-1) + (1-beta1)*(flfpr_ss)",
+                    {"if((yer*1000/popt)>c5_lrxf AND (ss_lrxf - lrxf(-1)) < 0.02) = TRUE": 
+                    "c0_lrxf*lrxf(-1) + (1-c0_lrxf)*(ss_lrxf)",
                     "else": 
-                    "beta1*lrxf(-1) + (1-beta1)*(const+beta2*log(yer*1000/popt)+beta3*log(yer*1000/popt)^2+beta4*educ)"
+                    "c0_lrxf*lrxf(-1) + (1-c0_lrxf)*(c1_lrxf+c2_lrxf*log(yer*1000/popt)+c3_lrxf*log(yer*1000/popt)^2+c4_lrxf*educ)"
                     },
                 "coefficients":
                     {
-                    "beta1": "0.65672",
-                    "beta2": "-70.84184",
-                    "beta3": "3.45780",
-                    "beta4": "0.5",
-                    "const": "444.41532",
-                    "turning_point": "37609",
-                    "flfpr_ss" : "87"
+                    "c0_lrxf": "0.65672",
+                    "c1_lrxf": "4.4441532",
+                    "c2_lrxf": "-0.7084184",
+                    "c3_lrxf": "0.0345780",
+                    "c4_lrxf": "0.005",
+                    "c5_lrxf": "37609",
+                    "ss_lrxf": "0.87"
                     }
                 },
             "lrxm": 

@@ -41,13 +41,13 @@ def name_row_transform(s):
     return s
 
 db = _ir.Databox.from_sheet(
-    "result_baseline_correct.csv",
+    "result_baseline_female.csv", # result_baseline_correct.csv, result_baseline_female
     name_row_transform=name_row_transform,
     description_row=False,
 )
 
 db_res = _ir.Databox.from_sheet(
-    "result_residuals1.csv",
+    "result_residuals_female.csv", # result_residuals1.csv, result_residuals_female
     name_row_transform=name_row_transform,
     description_row=False,
 )
@@ -172,6 +172,11 @@ db0 = db.copy()
 if dobaseline == 1:
     p1 = _ir.PlanSimulate(m, span, )
 
+    # Female LFPR block
+    p1.swap(span, ("popwaf", "res_popwaf"), ) # should be tuned until 2050
+    p1.swap(span, ("lrxf", "res_lrxf"), ) # exogenized temporarily until FLFPR formula is ready
+    p1.swap(span, ("skrat", "res_skrat"), ) # education variable, should be exogenized always
+
     # GDP items
     p1.swap(span_short, ("gcr", "res_gcr"), )
     p1.swap(span_short, ("pcr", "res_pcr"), )
@@ -222,8 +227,8 @@ if dobaseline == 1:
 
     db1 = db.copy()
 
-    s1, *_ = m.simulate(db1, span, method="period", plan=p1, )
-    s1.to_sheet("s1.csv", )
+    s1_female, *_ = m.simulate(db1, span, method="period", plan=p1, )
+    s1_female.to_sheet("s1_female.csv", )
 
 #
 # Scenario builder
@@ -465,16 +470,16 @@ if doscenario4 == 1:
 
 if docompare == 1:
 
-    scenario = s1 # replace me with the scenario
+    scenario = s1_female # replace me with the scenario
     baseline = db # replace me with the baseline
     diff_int = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
-    cmp_year = 2026 # set up the year when you want to compare the scenarios
+    cmp_year = 2050 # set up the year when you want to compare the scenarios
 
     tmp = {}
     variable_list = baseline.get_names()
 
     for variable_name in variable_list:
-            if variable_name in s1 and variable_name in db:
+            if variable_name in scenario and variable_name in db:
                 tmp[variable_name] = (scenario[variable_name] / baseline[variable_name]) * 100 - 100
                 if abs(tmp[variable_name](_ir.yy(cmp_year))) > diff_int:
                     print(f'Variable {variable_name}: {tmp[variable_name](_ir.yy(cmp_year))} (value > {diff_int} in {cmp_year})')
