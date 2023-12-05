@@ -224,7 +224,7 @@ if "baseline" in scenarios_to_run:
 
     # Equivalent to:
     # p1.exogenize(start_date, ("hic", "pcr"), )
-    # p1.enrun_genize(start_date, ("res_hic", "res_pcr"), )
+    # p1.endogenize(start_date, ("res_hic", "res_pcr"), )
 
     db1 = db.copy()
 
