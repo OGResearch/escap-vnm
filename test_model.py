@@ -9,7 +9,7 @@ import utils as _ut
 import csv
 
 
-_ir.min_irispie_version_required("0.22.1", )
+_ir.min_irispie_version_required("0.25.0", )
 
 # Setup which scenarios to run
 scenarios_to_run = (
