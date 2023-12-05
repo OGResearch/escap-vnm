@@ -33,13 +33,25 @@ def name_row_transform(s):
     s = s.replace("_0", "")
     s = s.replace("$", "_S")
     s = s.replace("_a", "_eviews") #add eviews shocks (tunes from eviews baseline)
-    # for scenario building
+    # for scenario building (without female)
     s = s.replace("_rca", "") #scen 1
     s = s.replace("_ntp", "") #scen 2_1
     s = s.replace("_edu", "") #scen 2_2
-    s = s.replace("_ct", "")  #scen 3
-    s = s.replace("_ict", "") #scen 4
+    #s = s.replace("_ct", "")  #scen 3
+    #s = s.replace("_ict", "") #scen 4
+    # for scenario building (with female)
+    s = s.replace("_ran", "") #scen 1
+    s = s.replace("_ntn", "") #scen 2_1
+    s = s.replace("_edn", "") #scen 2_2
+    s = s.replace("_ctn", "")  #scen 3
+    s = s.replace("_ic2", "") #scen 4
     return s
+
+db_wofemale_baseline = _ir.Databox.from_sheet(
+    "result_baseline_correct.csv", # result_baseline_correct.csv, result_baseline_female
+    name_row_transform=name_row_transform,
+    description_row=False,
+)
 
 db = _ir.Databox.from_sheet(
     "result_baseline_female.csv", # result_baseline_correct.csv, result_baseline_female
@@ -54,6 +66,10 @@ db_res = _ir.Databox.from_sheet(
 )
 
 db.update(db_res)
+
+# Needed for female model development
+db['lrxf_switch'] =  _ir.Series()
+db['lrxf_switch'][_ir.yy(2000) >> _ir.yy(2021)] = [0]
 
 #
 # Rescaling exercise
@@ -175,7 +191,7 @@ if "baseline" in scenarios_to_run:
 
     # Female LFPR block
     p1.swap(span, ("popwaf", "res_popwaf"), ) # should be tuned until 2050
-    p1.swap(span, ("lrxf", "res_lrxf"), ) # exogenized temporarily until FLFPR formula is ready
+    # p1.swap(span, ("lrxf", "res_lrxf"), ) # exogenized temporarily until FLFPR formula is ready
     p1.swap(span, ("skrat", "res_skrat"), ) # education variable, should be exogenized always
 
     # GDP items
@@ -231,23 +247,27 @@ if "baseline" in scenarios_to_run:
     s1_female, *_ = m.simulate(db1, span, method="period", plan=p1, )
     s1_female.to_sheet("s1_female.csv", )
 
+
+
 #
 # Scenario builder
 #
+
+    baseline_scen = s1_female
 
 # Scenario 1
 
 if "scenario1" in scenarios_to_run:
     # Scenario 1 assumption 
     db_asu = _ir.Databox.from_sheet(
-        "Scenario_1/result_scen1_asu.csv",
+        "Scenarios_female/Scenario_1/result_scen1_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 1 result for comparison 
     db_scen1 = _ir.Databox.from_sheet(
-        "Scenario_1/result_scen1.csv",
+        "Scenarios_female/Scenario_1/result_scen1.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -257,25 +277,25 @@ if "scenario1" in scenarios_to_run:
     db2.update(db_asu) #add the scenario assumpions to the db
 
     # add baseline shock to the simulation
-    res_variable_list = [variable_name for variable_name in s1.get_names() if variable_name.startswith('res')]
+    res_variable_list = [variable_name for variable_name in baseline_scen.get_names() if variable_name.startswith('res')]
     for variable_name in res_variable_list:
-         db2[variable_name] = s1[variable_name]
+         db2[variable_name] = baseline_scen[variable_name]
 
     # Scenario 1 tunes:
         # add shocks
-    db2['res_ipr']      = db_asu['ipr_eviews'] + s1['res_ipr']
+    db2['res_ipr']      = db_asu['ipr_eviews'] + baseline_scen['res_ipr']
     db2['ipr_eviews']   = 0
 
-    db2['res_rc']       = db_asu['rc_eviews'] + s1['res_rc']
+    db2['res_rc']       = db_asu['rc_eviews'] + baseline_scen['res_rc']
     db2['rc_eviews']    = 0
 
         # exogenize additional variables
     p2 = _ir.PlanSimulate(m, span, )
     p2.swap(span, ("ogi", "res_ogi"), ) 
     p2.swap(span, ("pr", "res_pr"), ) 
-    
+    # p2.swap(span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works 
 
-    s_scen1, *_ = m.simulate(db2, span, method="period", plan=p2, )
+    s_scen1_female, *_ = m.simulate(db2, span, method="period", plan=p2, )
 
 
 # Scenario 2_1
@@ -283,14 +303,14 @@ if "scenario1" in scenarios_to_run:
 if "scenario2_1" in scenarios_to_run:
     # Scenario 2_1 assumption 
     db_asu2_1 = _ir.Databox.from_sheet(
-        "Scenario_2_1/result_scen2_1_asu.csv",
+        "Scenarios_female/Scenario_2_1/result_scen2_1_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 2_1 result for comparison 
     db_scen2_1 = _ir.Databox.from_sheet(
-        "Scenario_2_1/result_scen2_1.csv",
+        "Scenarios_female/Scenario_2_1/result_scen2_1.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -300,25 +320,25 @@ if "scenario2_1" in scenarios_to_run:
     db2_1.update(db_asu2_1) #add the scenario assumpions to the db
 
     # add baseline shock to the simulation
-    res_variable_list = [variable_name for variable_name in s1.get_names() if variable_name.startswith('res')]
+    res_variable_list = [variable_name for variable_name in baseline_scen.get_names() if variable_name.startswith('res')]
     for variable_name in res_variable_list:
-         db2_1[variable_name] = s1[variable_name]
+         db2_1[variable_name] = baseline_scen[variable_name]
 
     # Scenario 2_1 tunes:
         # add shocks
-    db2_1['res_ipr']            = s1['res_ipr'] + db_asu2_1['ipr_eviews']
+    db2_1['res_ipr']            = baseline_scen['res_ipr'] + db_asu2_1['ipr_eviews']
     db2_1['ipr_eviews']         = 0
 
-    db2_1['res_techl']          = s1['res_techl'] + db_asu2_1['techl_eviews']
+    db2_1['res_techl']          = baseline_scen['res_techl'] + db_asu2_1['techl_eviews']
     db2_1['techl_eviews']       = 0
 
-    db2_1['res_gini_disp']      = s1['res_gini_disp'] + db_asu2_1['gini_disp_eviews']
+    db2_1['res_gini_disp']      = baseline_scen['res_gini_disp'] + db_asu2_1['gini_disp_eviews']
     db2_1['gini_disp_eviews']   = 0
 
-    db2_1['res_pm25']           = s1['res_pm25'] + db_asu2_1['pm25_eviews']
+    db2_1['res_pm25']           = baseline_scen['res_pm25'] + db_asu2_1['pm25_eviews']
     db2_1['pm25_eviews']        = 0
 
-    db2_1['res_rel_red']        = s1['res_rel_red'] + db_asu2_1['rel_red_eviews']
+    db2_1['res_rel_red']        = baseline_scen['res_rel_red'] + db_asu2_1['rel_red_eviews']
     db2_1['rel_red_eviews']     = 0
 
     db2_1['rpdi_eviews']        = db_asu2_1['rpdi_eviews'] # no shock in iripie on this variable, overwrite the eviews constant shock
@@ -329,10 +349,12 @@ if "scenario2_1" in scenarios_to_run:
     p2.swap(span, ("exph", "res_exph"), ) 
     p2.swap(span, ("expsp", "res_expsp"), ) 
     p2.swap(span, ("eff", "res_eff"), ) 
+    #p2.swap(span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
+    p2.swap(span, ("skrat", "res_skrat"), ) 
     
 
-    s_scen2_1, *_ = m.simulate(db2_1, span, method="period", plan=p2, )
-    s_scen2_1.to_sheet("s_scen2_1.csv", )
+    s_scen2_1_female, *_ = m.simulate(db2_1, span, method="period", plan=p2, )
+    s_scen2_1_female.to_sheet("s_scen2_1_female.csv", )
 
 
 # Scenario 2_2
@@ -340,14 +362,14 @@ if "scenario2_1" in scenarios_to_run:
 if "scenario2_2" in scenarios_to_run:
     # Scenario 2_2 assumptions 
     db_asu2_2 = _ir.Databox.from_sheet(
-        "Scenario_2_2/result_scen2_2_asu.csv",
+        "Scenarios_female/Scenario_2_2/result_scen2_2_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 2_2 result for comparison 
     db_scen2_2 = _ir.Databox.from_sheet(
-        "Scenario_2_2/result_scen2_2.csv",
+        "Scenarios_female/Scenario_2_2/result_scen2_2.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -357,26 +379,28 @@ if "scenario2_2" in scenarios_to_run:
     db2_2.update(db_asu2_2) #add the scenario assumpions to the db
 
     # add baseline shock to the simulation
-    res_variable_list = [variable_name for variable_name in s1.get_names() if variable_name.startswith('res')]
+    res_variable_list = [variable_name for variable_name in baseline_scen.get_names() if variable_name.startswith('res')]
     for variable_name in res_variable_list:
-         db2_2[variable_name] = s1[variable_name]
+         db2_2[variable_name] = baseline_scen[variable_name]
 
     # Scenario 2_2 tunes:
         # add shocks
-    db2_2['res_techl']         = s1['res_techl'] + db_asu2_2['techl_eviews']
+    db2_2['res_techl']         = baseline_scen['res_techl'] + db_asu2_2['techl_eviews']
     db2_2['techl_eviews']      = 0
 
-    db2_2['res_gini_disp']     = s1['res_gini_disp'] + db_asu2_2['gini_disp_eviews']
+    db2_2['res_gini_disp']     = baseline_scen['res_gini_disp'] + db_asu2_2['gini_disp_eviews']
     db2_2['gini_disp_eviews']  = 0
 
         # exogenize additional variables
     p3 = _ir.PlanSimulate(m, span, )
     p3.swap(span, ("ogi", "res_ogi"), )
     p3.swap(span, ("ogc", "res_ogc"), ) 
+    #p3.swap(span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
+    p3.swap(span, ("skrat", "res_skrat"), ) 
   
 
-    s_scen2_2, *_ = m.simulate(db2_2, span, method="period", plan=p3, )
-    s_scen2_2.to_sheet("s_scen2_2.csv", )
+    s_scen2_2_female, *_ = m.simulate(db2_2, span, method="period", plan=p3, )
+    s_scen2_2_female.to_sheet("s_scen2_2_female.csv", )
 
 
 # Scenario 3
@@ -384,14 +408,14 @@ if "scenario2_2" in scenarios_to_run:
 if "scenario3" in scenarios_to_run:
     # Scenario 3 assumptions 
     db_asu3 = _ir.Databox.from_sheet(
-        "Scenario_3/result_scen3_asu.csv",
+        "Scenarios_female/Scenario_3/result_scen3_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 3 result for comparison 
     db_scen3 = _ir.Databox.from_sheet(
-        "Scenario_3/result_scen3.csv",
+        "Scenarios_female/Scenario_3/result_scen3.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -401,9 +425,9 @@ if "scenario3" in scenarios_to_run:
     db3.update(db_asu3) #add the scenario assumpions to the db
 
     # add baseline shock to the simulation
-    res_variable_list = [variable_name for variable_name in s1.get_names() if variable_name.startswith('res')]
+    res_variable_list = [variable_name for variable_name in baseline_scen.get_names() if variable_name.startswith('res')]
     for variable_name in res_variable_list:
-         db3[variable_name] = s1[variable_name]
+         db3[variable_name] = baseline_scen[variable_name]
 
     # Scenario 3 tunes
     # add shocks
@@ -415,24 +439,25 @@ if "scenario3" in scenarios_to_run:
     p4.swap(span, ("sharesp", "res_sharesp"), ) 
     p4.swap(span, ("shareh", "res_shareh"), ) 
     p4.swap(span, ("sharex", "res_sharex"), ) 
+    #p4.swap(span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
   
 
-    s_scen3, *_ = m.simulate(db3, span, method="period", plan=p4, )
-    s_scen3.to_sheet("s_scen3.csv", )
+    s_scen3_female, *_ = m.simulate(db3, span, method="period", plan=p4, )
+    s_scen3_female.to_sheet("s_scen3_female.csv", )
 
 # Scenario 4
 
 if "scenario4" in scenarios_to_run:
     # Scenario 4 assumptions 
     db_asu4 = _ir.Databox.from_sheet(
-        "Scenario_4/result_scen4_asu.csv",
+        "Scenarios_female/Scenario_4/result_scen4_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 4 result for comparison 
     db_scen4 = _ir.Databox.from_sheet(
-        "Scenario_4/result_scen4.csv",
+        "Scenarios_female/Scenario_4/result_scen4.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -442,28 +467,29 @@ if "scenario4" in scenarios_to_run:
     db4.update(db_asu4) #add the scenario assumpions to the db
 
     # add baseline shock to the simulation
-    res_variable_list = [variable_name for variable_name in s1.get_names() if variable_name.startswith('res')]
+    res_variable_list = [variable_name for variable_name in baseline_scen.get_names() if variable_name.startswith('res')]
     for variable_name in res_variable_list:
-         db4[variable_name] = s1[variable_name]
+         db4[variable_name] = baseline_scen[variable_name]
 
     # Scenario 4 tunes
     # add shocks
-    db4['res_ipr']            = s1['res_ipr'] + db_asu4['ipr_eviews']
+    db4['res_ipr']            = baseline_scen['res_ipr'] + db_asu4['ipr_eviews']
     db4['ipr_eviews']         = 0
 
-    db4['res_techl']          = s1['res_techl'] + db_asu4['techl_eviews']
+    db4['res_techl']          = baseline_scen['res_techl'] + db_asu4['techl_eviews']
     db4['techl_eviews']       = 0
 
-    db4['res_finc']           = s1['res_finc'] + db_asu4['finc_eviews']
+    db4['res_finc']           = baseline_scen['res_finc'] + db_asu4['finc_eviews']
     db4['finc_eviews']        = 0
  
     # exogenize additional variables
     p4 = _ir.PlanSimulate(m, span, )
     p4.swap(span, ("ogi", "res_ogi"), )
     p4.swap(span, ("rel_red", "res_rel_red"), )  
+    #p4.swap(span, ("lrxf", "res_lrxf"), )  # it is here to check how irispie LRXF formula works
 
-    s_scen4, *_ = m.simulate(db4, span, method="period", plan=p4, )
-    s_scen4.to_sheet("s_scen4.csv", )
+    s_scen4_female, *_ = m.simulate(db4, span, method="period", plan=p4, )
+    s_scen4_female.to_sheet("s_scen4_female.csv", )
 
 #
 # Compare scenarios
@@ -471,8 +497,8 @@ if "scenario4" in scenarios_to_run:
 
 if "compare" in scenarios_to_run:
 
-    scenario = s1_female # replace me with the scenario
-    reference = db # replace me with the reference databox
+    scenario = s_scen4_female # replace me with the scenario
+    reference = db_scen4 # replace me with the reference databox
     tolerance = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
     cmp_year = _ir.yy(2050) # set up the year when you want to compare the scenarios
 
@@ -486,7 +512,7 @@ if "compare" in scenarios_to_run:
     }
 
     messages = [
-        f'Variable {name}: {tmp[name](_ir.yy(cmp_year))} (value > {tolerance} in {cmp_year})'
+        f'Variable {name}: {discrep_db[name](cmp_year)} (value > {tolerance} in {cmp_year})'
         for name in discrep_db.keys()
         if abs(discrep_db[name](cmp_year)) > tolerance
     ]

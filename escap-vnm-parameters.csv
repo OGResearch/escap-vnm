@@ -20,3 +20,5 @@ c2_lrxf,-0.7084184
 c3_lrxf,0.0345780
 c4_lrxf,0.005
 c5_lrxf,37609
+lrxf_sigma_1,100
+lrxf_sigma_2,500

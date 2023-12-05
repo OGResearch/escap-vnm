@@ -79,6 +79,7 @@
     xtdno_S_eviews
     xtr_eviews
     lnnf_eviews
+    urx_eviews
 
 !log-variables
 
@@ -273,7 +274,7 @@
 
     # lrx`lhs - res_lrx`res = lrx[-1] + 0.03 * log(yer[-1] / yft[-1]) + lrx_eviews;
 
-    urx`lhs === (1 - lnn / lfn) * 100;
+    urx`lhs === (1 - lnn / lfn) * 100 + urx_eviews;
 
     urxf`lhs - res_urxf`res = urxf[-1] * urx / urx[-1] * lnn / lnnf / (lnn[-1] / lnnf[-1]);
 
@@ -342,7 +343,7 @@
 
     popwam`lhs_log === popwa - popwaf;
     
-    lrxf`lhs - res_lrxf`res = c0_lrxf`par*lrxf[-1] + (1-c0_lrxf`par) * (c1_lrxf`par + c2_lrxf`par * log(yer*1000/popt) + c3_lrxf`par * log(yer*1000/popt)^2 + c4_lrxf`par * skrat);
+    # lrxf`lhs - res_lrxf`res = c0_lrxf`par*lrxf[-1] + (1-c0_lrxf`par) * (c1_lrxf`par + c2_lrxf`par * log(yer*1000/popt) + c3_lrxf`par * log(yer*1000/popt)^2 + c4_lrxf`par * skrat);
 
     # lrxf`lhs - res_lrxf`res = c0_lrxf`par*lrxf[-1] + (1-c0_lrxf`par) * ss_lrxf`par;
 
@@ -359,5 +360,21 @@
     diff_log(lnnf`lhs_log) - res_lnnf`res = diff_log(lfnf) - 0.1 * (log(lnnf[-1]) - log(lfnf[-1])) + 0.3 * (diff_log(yer[-1])) + lnnf_eviews;
 
     skrat`lhs - res_skrat`res = skrat[-1];
+
+    lrxf_switch`lhs = logistic($lrxf_cond_1$ * lrxf_sigma_1`par) * logistic($lrxf_cond_2$ * lrxf_sigma_2`par);
+
+    lrxf`lhs - res_lrxf`res = ...
+        + c0_lrxf`par * lrxf[-1] ...
+        + (1 - c0_lrxf`par) * ((1 - lrxf_switch) * $lrfx_trans_dynamics$ +  lrxf_switch * $lrfx_ss_dynamics$) ...
+    ;
+
+!substitutions
+
+    lrxf_cond_1 := ((yer*1000/popt/c5_lrxf`par) - 1);
+    lrxf_cond_2 := (lrxf[-1] - (ss_lrxf`par - 0.02));
+
+    lrfx_ss_dynamics := (ss_lrxf`par);
+    lrfx_trans_dynamics := (c1_lrxf`par + c2_lrxf`par*log(yer*1000/popt) + c3_lrxf`par*log(yer*1000/popt)**2 + c4_lrxf`par*skrat);
+
 #}
 
