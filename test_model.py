@@ -12,14 +12,15 @@ import csv
 _ir.min_irispie_version_required("0.22.1", )
 
 # Setup which scenarios to run
-dobaseline = 1
-doscenario1 = 0
-doscenario2_1 = 0
-doscenario2_2 = 0
-doscenario3 = 0
-doscenario4 = 0
-
-docompare = 1
+scenarios_to_run = (
+    "baseline",
+    #"scenario1",
+    #"scenario2_1",
+    #"scenario2_2",
+    #"scenario3",
+    #"scenario4",
+    "compare",
+)
 
 #
 # Read input data
@@ -169,7 +170,7 @@ db0 = db.copy()
 # Simulation plan in baseline scenario
 #
 
-if dobaseline == 1:
+if "baseline" in scenarios_to_run:
     p1 = _ir.PlanSimulate(m, span, )
 
     # Female LFPR block
@@ -187,7 +188,7 @@ if dobaseline == 1:
     p1.swap(span_short, ("xtr", "res_xtr"), )
     p1.swap(span_short, ("mtr", "res_mtr"), )
     # Budget expenditure items
-    # p1.swap(span, ("exp", "res_ogi"), ) # exp is an identity withouth shock, endogenizing one subitem of exp // might want to change this
+    # p1.swap(span, ("exp", "res_ogi"), ) # exp is an identity withouth shock, enrun_genizing one subitem of exp // might want to change this
     p1.swap(span_short, ("expe", "res_expe"), )
     p1.swap(span_short, ("exph", "res_exph"), ) 
     p1.swap(span_short, ("expsp", "res_expsp"), )
@@ -195,7 +196,7 @@ if dobaseline == 1:
     p1.swap(span_short, ("ogi", "res_ogi"), ) 
     p1.swap(span_short, ("gip", "res_gip"), ) 
     # Budget revenue items
-    # p1.swap(span, ("exp", "res_ogi"), ) # exp is an identity withouth shock, endogenizing one subitem of exp // might want to change this
+    # p1.swap(span, ("exp", "res_ogi"), ) # exp is an identity withouth shock, enrun_genizing one subitem of exp // might want to change this
     p1.swap(span_short, ("tax", "res_taxr"), )
     p1.swap(span_short, ("ctax", "res_ctaxr"), ) 
     p1.swap(span_short, ("itax", "res_itaxr"), )
@@ -215,7 +216,7 @@ if dobaseline == 1:
     p1.swap(span_short, ("gdn", "res_gdn"), )
     p1.swap(span_short, ("glnt", "res_glnt"), )
 
-    # Exogenize these random extra baseline variables
+    # Exogenize these ranrun_m extra baseline variables
     p1.swap(span, ("expeb", "res_expeb"), )
     p1.swap(span, ("exphb", "res_exphb"), )
     p1.swap(span, ("expspb", "res_expspb"), )
@@ -223,7 +224,7 @@ if dobaseline == 1:
 
     # Equivalent to:
     # p1.exogenize(start_date, ("hic", "pcr"), )
-    # p1.endogenize(start_date, ("res_hic", "res_pcr"), )
+    # p1.enrun_genize(start_date, ("res_hic", "res_pcr"), )
 
     db1 = db.copy()
 
@@ -236,7 +237,7 @@ if dobaseline == 1:
 
 # Scenario 1
 
-if doscenario1 == 1:
+if "scenario1" in scenarios_to_run:
     # Scenario 1 assumption 
     db_asu = _ir.Databox.from_sheet(
         "Scenario_1/result_scen1_asu.csv",
@@ -279,7 +280,7 @@ if doscenario1 == 1:
 
 # Scenario 2_1
 
-if doscenario2_1 == 1:
+if "scenario2_1" in scenarios_to_run:
     # Scenario 2_1 assumption 
     db_asu2_1 = _ir.Databox.from_sheet(
         "Scenario_2_1/result_scen2_1_asu.csv",
@@ -336,7 +337,7 @@ if doscenario2_1 == 1:
 
 # Scenario 2_2
 
-if doscenario2_2 == 1:
+if "scenario2_2" in scenarios_to_run:
     # Scenario 2_2 assumptions 
     db_asu2_2 = _ir.Databox.from_sheet(
         "Scenario_2_2/result_scen2_2_asu.csv",
@@ -380,7 +381,7 @@ if doscenario2_2 == 1:
 
 # Scenario 3
 
-if doscenario3 == 1:
+if "scenario3" in scenarios_to_run:
     # Scenario 3 assumptions 
     db_asu3 = _ir.Databox.from_sheet(
         "Scenario_3/result_scen3_asu.csv",
@@ -421,7 +422,7 @@ if doscenario3 == 1:
 
 # Scenario 4
 
-if doscenario4 == 1:
+if "scenario4" in scenarios_to_run:
     # Scenario 4 assumptions 
     db_asu4 = _ir.Databox.from_sheet(
         "Scenario_4/result_scen4_asu.csv",
@@ -468,22 +469,30 @@ if doscenario4 == 1:
 # Compare scenarios
 #
 
-if docompare == 1:
+if "compare" in scenarios_to_run:
 
     scenario = s1_female # replace me with the scenario
-    baseline = db # replace me with the baseline
-    diff_int = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
-    cmp_year = 2050 # set up the year when you want to compare the scenarios
+    reference = db # replace me with the reference databox
+    tolerance = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
+    cmp_year = _ir.yy(2050) # set up the year when you want to compare the scenarios
 
     tmp = {}
-    variable_list = baseline.get_names()
+    variable_list = reference.get_names()
 
-    for variable_name in variable_list:
-            if variable_name in scenario and variable_name in db:
-                tmp[variable_name] = (scenario[variable_name] / baseline[variable_name]) * 100 - 100
-                if abs(tmp[variable_name](_ir.yy(cmp_year))) > diff_int:
-                    print(f'Variable {variable_name}: {tmp[variable_name](_ir.yy(cmp_year))} (value > {diff_int} in {cmp_year})')
+    discrep_db = {
+        name: (scenario[name] / reference[name]) * 100 - 100
+        for name in scenario.keys()
+        if name in reference.keys()
+    }
 
+    messages = [
+        f'Variable {name}: {tmp[name](_ir.yy(cmp_year))} (value > {tolerance} in {cmp_year})'
+        for name in discrep_db.keys()
+        if abs(discrep_db[name](cmp_year)) > tolerance
+    ]
 
-
+    if messages:
+        print("\n".join(messages))
+    else:
+        print("No discrepancies found")
 
