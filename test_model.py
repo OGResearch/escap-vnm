@@ -14,7 +14,7 @@ _ir.min_irispie_version_required("0.25.0", )
 # Setup which scenarios to run
 scenarios_to_run = (
     "baseline",
-    #"scenario1",
+    "scenario1",
     #"scenario2_1",
     #"scenario2_2",
     #"scenario3",
@@ -260,36 +260,109 @@ if "baseline" in scenarios_to_run:
 if "scenario1" in scenarios_to_run:
     # Scenario 1 assumption 
     db_asu = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_1/result_scen1_asu.csv",
+        "Scenarios_with_female/Scenario_1/result_scen1_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 1 result for comparison 
     db_scen1 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_1/result_scen1.csv",
+        "Scenarios_with_female/Scenario_1/result_scen1.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # create the fcast database
     db2 = db1.copy()
-    db2.update(db_asu) #add the scenario assumpions to the db
+    #db2.update(db_asu) #add the scenario assumpions from eview to the db, not needed if you set up the tunes below
 
     # add baseline shock to the simulation
     res_variable_list = [variable_name for variable_name in baseline_scen.get_names() if variable_name.startswith('res')]
     for variable_name in res_variable_list:
          db2[variable_name] = baseline_scen[variable_name]
 
-    # Scenario 1 tunes:
-        # add shocks
-    db2['res_ipr']      = db_asu['ipr_eviews'] + baseline_scen['res_ipr']
-    db2['ipr_eviews']   = 0
+    #
+    # Scenario 1 tunes
+    #
 
-    db2['res_rc']       = db_asu['rc_eviews'] + baseline_scen['res_rc']
+    # Assumptions to set
+    # Set the size of investment in renewables per year until 2030 (bln USD)
+    shock1 = 13.5
+	# Set the size of investment in renewables per year from 2030 until 2050 (bln USD)"
+    shock2 = 23
+    # Initial Renewable Energy capacity
+    initial_rc = db1['rc'][_ir.yy(2021)].get_data()
+	# Set the size of the renewable energy capacity in 2030 (Exojoules)
+    shock3 = 1.26 
+    # Set the size of the renewable energy capacity in 2050 (Exojoules)
+    shock4 = 6.5 
+    # Set share of renewable investment financed by the government
+    shock5 = 100
+    
+    # Set the year when the shock is first introduced
+    YR1 = 2021
+    # Enter number of years over which to spread the investment shock first period
+    Y3 = 9
+    # Enter number of years over which to spread the investment shock second period
+    Y4 = 20
+
+    # Create the investment periods:
+        # 1st investment period
+    start_date1          = _ir.yy(YR1)
+    end_date1            = _ir.yy(YR1)+Y3
+    investment_span_1    = start_date1 >> end_date1
+        # 2nd investment period
+    start_date2          = _ir.yy(YR1)+Y3+1
+    end_date2            = _ir.yy(YR1)+Y3+Y4
+    investment_span_2    = start_date2 >> end_date2
+        # end: after investment period - not needed, this investment scenario is running until end_date
+
+    # Add shocks
+    #db2['res_ipr']      = db_asu['ipr_eviews'] + baseline_scen['res_ipr']
+    db2['res_ipr'][investment_span_1] = baseline_scen['res_ipr'][investment_span_1] + db1['ipr_eviews'][investment_span_1] + 0.18*((1-shock5/100)*shock1)/db1['yen_S'][investment_span_1]*db1['yer'][investment_span_1]/db1['ipr'][investment_span_1]
+    db2['res_ipr'][investment_span_2] = baseline_scen['res_ipr'][investment_span_2] + db1['ipr_eviews'][investment_span_2] + 0.05*((1-shock5/100)*shock2)/db1['yen_S'][investment_span_2]*db1['yer'][investment_span_2]/db1['ipr'][investment_span_2]
+    db2['ipr_eviews']                 = 0
+
+    #db2['res_rc']       = db_asu['rc_eviews'] + baseline_scen['res_rc']
+    db2['res_rc'][investment_span_1] = baseline_scen['res_rc'][investment_span_1] + db1['rc_eviews'][investment_span_1] + 0.3*(_ir.log(shock3) - _ir.log(initial_rc))/Y3
+    db2['res_rc'][investment_span_2] = baseline_scen['res_rc'][investment_span_2] + db1['rc_eviews'][investment_span_2] + 1.1*(_ir.log(shock4) - _ir.log(shock3))/Y4
     db2['rc_eviews']    = 0
 
-        # exogenize additional variables
+    # Exogenized variables
+    db2['ogi'][investment_span_1] = db1['ogi'][investment_span_1] + db1['exr'][investment_span_1] * shock1 * shock5/100
+    db2['ogi'][investment_span_2] = db1['ogi'][investment_span_2] + db1['exr'][investment_span_2] * shock2 * shock5/100
+
+    db2['pr'] = db1['pr'].copy()
+    
+    for i in list(investment_span_1):
+        pr_lag = db2['pr'][i-1].get_data()
+        pr_base = db1['pr'][i].get_data()
+        pr_base_lag  = db1['pr'][i-1].get_data()
+        yen_S = db1['yen_S'][i].get_data()
+        
+        db2['pr'][i] = (pr_lag)*(pr_base/pr_base_lag) - 0.2*(shock1/yen_S)
+
+    for i in list(investment_span_2):
+        pr_lag = db2['pr'][i-1].get_data()
+        pr_base = db1['pr'][i].get_data()
+        pr_base_lag  = db1['pr'][i-1].get_data()
+        yen_S = db1['yen_S'][i].get_data()
+        
+        db2['pr'][i] = (pr_lag)*(pr_base/pr_base_lag) - 0.2*(shock2/yen_S)
+
+    # other and better way of handeling the sequential shock (db_temp is not working properly)
+    # s = """
+    #        pr = pr[-1]*(pr/pr[-1]) - 0.2*shock1/db1['yen_S'][year-1]
+    # """
+    # db_temp =  _ir.Databox()
+    # db_temp.update([db2['pr'],db1['yen_S']]) 
+    # db_temp.update(db1['yen_S']) 
+    # db_temp.update(shock1) 
+    # shock_param = {'shock1': shock1}
+    # m.assign(m.assign(shock_param, ), )
+    # m = _ir.Sequential.from_string(s,)
+    # m.simulate(db_temp, investment_span_1)
+   
     p2 = _ir.PlanSimulate(m, span, )
     p2.swap(span, ("ogi", "res_ogi"), ) 
     p2.swap(span, ("pr", "res_pr"), ) 
@@ -303,14 +376,14 @@ if "scenario1" in scenarios_to_run:
 if "scenario2_1" in scenarios_to_run:
     # Scenario 2_1 assumption 
     db_asu2_1 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_2_1/result_scen2_1_asu.csv",
+        "Scenarios_with_female/Scenario_2_1/result_scen2_1_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 2_1 result for comparison 
     db_scen2_1 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_2_1/result_scen2_1.csv",
+        "Scenarios_with_female/Scenario_2_1/result_scen2_1.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -362,14 +435,14 @@ if "scenario2_1" in scenarios_to_run:
 if "scenario2_2" in scenarios_to_run:
     # Scenario 2_2 assumptions 
     db_asu2_2 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_2_2/result_scen2_2_asu.csv",
+        "Scenarios_with_female/Scenario_2_2/result_scen2_2_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 2_2 result for comparison 
     db_scen2_2 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_2_2/result_scen2_2.csv",
+        "Scenarios_with_female/Scenario_2_2/result_scen2_2.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -398,7 +471,6 @@ if "scenario2_2" in scenarios_to_run:
     #p3.swap(span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
     p3.swap(span, ("skrat", "res_skrat"), ) 
   
-
     s_scen2_2_female, *_ = m.simulate(db2_2, span, method="period", plan=p3, )
     s_scen2_2_female.to_sheet("s_scen2_2_female.csv", )
 
@@ -408,14 +480,14 @@ if "scenario2_2" in scenarios_to_run:
 if "scenario3" in scenarios_to_run:
     # Scenario 3 assumptions 
     db_asu3 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_3/result_scen3_asu.csv",
+        "Scenarios_with_female/Scenario_3/result_scen3_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 3 result for comparison 
     db_scen3 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_3/result_scen3.csv",
+        "Scenarios_with_female/Scenario_3/result_scen3.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
@@ -450,39 +522,84 @@ if "scenario3" in scenarios_to_run:
 if "scenario4" in scenarios_to_run:
     # Scenario 4 assumptions 
     db_asu4 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_4/result_scen4_asu.csv",
+        "Scenarios_with_female/Scenario_4/result_scen4_asu.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # Scenario 4 result for comparison 
     db_scen4 = _ir.Databox.from_sheet(
-        "Scenarios_female/Scenario_4/result_scen4.csv",
+        "Scenarios_with_female/Scenario_4/result_scen4.csv",
         name_row_transform=name_row_transform,
         description_row=False,
     )
 
     # create the fcast database
     db4 = db1.copy()
-    db4.update(db_asu4) #add the scenario assumpions to the db
+    #db4.update(db_asu4) #add the scenario assumpions to the db, not needed if you set up the tunes below
 
     # add baseline shock to the simulation
     res_variable_list = [variable_name for variable_name in baseline_scen.get_names() if variable_name.startswith('res')]
     for variable_name in res_variable_list:
          db4[variable_name] = baseline_scen[variable_name]
 
+    #
     # Scenario 4 tunes
-    # add shocks
-    db4['res_ipr']            = baseline_scen['res_ipr'] + db_asu4['ipr_eviews']
-    db4['ipr_eviews']         = 0
+    #
 
-    db4['res_techl']          = baseline_scen['res_techl'] + db_asu4['techl_eviews']
-    db4['techl_eviews']       = 0
+    # Assumptions to set:
+    # Set the size of investment in ICT per year between 2021-2025 (as bln LCY)
+    shock1 = 20890
+	# Set share of ICT investment financed by the government between 2021-2025 (%)"
+    shock1a = 7
+    # Set the size of investment in ICT per year between 2026-2030 (as bln LCY)
+    shock2 = 32450
+	# Set share of ICT investment financed by the government between 2026-2030 (%)"
+    shock2a = 3
+    # Set the year when the shock is first introduced
+    YR1 = 2021
+    # Enter number of years over which to spread the investment shock first period
+    Y3 = 5
+    # Enter number of years over which to spread the investment shock second period
+    Y4 = 5
 
-    db4['res_finc']           = baseline_scen['res_finc'] + db_asu4['finc_eviews']
-    db4['finc_eviews']        = 0
+    # Create the investment periods:
+        # 1st investment period
+    start_date1          = _ir.yy(YR1)
+    end_date1            = _ir.yy(YR1)+Y3-1
+    investment_span_1    = start_date1 >> end_date1
+        # 2nd investment period
+    start_date2          = _ir.yy(YR1)+Y3
+    end_date2            = _ir.yy(YR1)+Y3+Y4-1
+    investment_span_2    = start_date2 >> end_date2
+        # end: after investment period
+    span_end             = end_date2+1 >> end_date
+
+    # Add shocks
+        # db4['res_ipr']               = baseline_scen['res_ipr'] + db_asu4['ipr_eviews']
+    db4['res_ipr'][investment_span_1] = baseline_scen['res_ipr'][investment_span_1] + db1['ipr_eviews'][investment_span_1] + 0.2*((1-shock1a/100)*shock1)/db1['yen'][investment_span_1]*db1['yer'][investment_span_1]/db1['ipr'][investment_span_1]
+    db4['res_ipr'][investment_span_2] = baseline_scen['res_ipr'][investment_span_2] + db1['ipr_eviews'][investment_span_2] + 0.2*((1-shock2a/100)*shock2)/db1['yen'][investment_span_2]*db1['yer'][investment_span_2]/db1['ipr'][investment_span_2]
+    db4['res_ipr'][span_end]          = baseline_scen['res_ipr'][span_end] + db1['ipr_eviews'][span_end]
+    db4['ipr_eviews']                 = 0
+
+        #db4['res_techl']                = baseline_scen['res_techl'] + db_asu4['techl_eviews']
+    db4['res_techl'][investment_span_1]  = baseline_scen['res_techl'][investment_span_1] + db1['techl_eviews'][investment_span_1] + 0.0022*shock1/db1['yen'][investment_span_1]*100
+    db4['res_techl'][investment_span_2]  = baseline_scen['res_techl'][investment_span_2] + db1['techl_eviews'][investment_span_2] + 0.0022*shock1/db1['yen'][investment_span_2]*100
+    db4['res_techl'][span_end]           = baseline_scen['res_techl'][span_end] + db1['techl_eviews'][span_end]
+    db4['techl_eviews']                  = 0
+
+        #db4['res_finc']                = baseline_scen['res_finc'] + db_asu4['finc_eviews']
+    db4['res_finc'][investment_span_1]  = baseline_scen['res_finc'][investment_span_1] + db1['finc_eviews'][investment_span_1] + 0.4*shock1/db1['yen'][investment_span_1]*100
+    db4['res_finc'][investment_span_2]  = baseline_scen['res_finc'][investment_span_2] + db1['finc_eviews'][investment_span_2] + 0.4*shock2/db1['yen'][investment_span_2]*100
+    db4['res_finc'][span_end]           = baseline_scen['res_finc'][span_end]  + db1['finc_eviews'][span_end]
+    db4['finc_eviews']                  = 0
  
-    # exogenize additional variables
+    # Exogenize variables
+    db4['ogi'][investment_span_1] = db1['ogi'][investment_span_1] + shock1 * shock1a/100
+    db4['ogi'][investment_span_2] = db1['ogi'][investment_span_2] + shock2 * shock2a/100
+    db4['ogi'][span_end]          = db1['ogi'][span_end]
+    db4['rel_red']                = db1['rel_red']
+
     p4 = _ir.PlanSimulate(m, span, )
     p4.swap(span, ("ogi", "res_ogi"), )
     p4.swap(span, ("rel_red", "res_rel_red"), )  
@@ -497,8 +614,8 @@ if "scenario4" in scenarios_to_run:
 
 if "compare" in scenarios_to_run:
 
-    scenario = s_scen4_female # replace me with the scenario
-    reference = db_scen4 # replace me with the reference databox
+    scenario = s_scen1_female # replace me with the scenario
+    reference = db_scen1 # replace me with the reference databox
     tolerance = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
     cmp_year = _ir.yy(2050) # set up the year when you want to compare the scenarios
 
