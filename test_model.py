@@ -15,9 +15,9 @@ _ir.min_irispie_version_required("0.25.0", )
 scenarios_to_run = (
     "baseline",
     #"scenario1",
-    #"scenario2_1",
+    "scenario2_1",
     #"scenario2_2",
-    "scenario3",
+    #"scenario3",
     #"scenario4",
     "compare",
 )
@@ -403,19 +403,19 @@ if "scenario2_1" in scenarios_to_run:
 
     # Assumptions to set
     # Set the size of investment in infrastructure projects per year (as bln LCY)
-    shock1 = 51757 # + 1500 + 426899 + 8604
+    shock1  = 51757 # 51757 + 1500 + 426899 + 8604
     # Set share of infrastructre investment financed by the government
     shock1a = 99 # 100
 	# Set the size of investment in health sector per year (as bln LCY)
-    shock2 = 1500 # 51757 + 1500 + 426899 + 8604
+    shock2  = 1500 #51757 + 1500 + 426899 + 8604
     # Set share of health investment financed by the government
-    shock2a = 73 # 100
+    shock2a = 73 #100
 	# Set the size of investment in social protection per year (as bln LCY)
-    shock3 = 426899 # 51757 + 1500 + 426899 + 8604
+    shock3  = 426899 #51757 + 1500 + 426899 + 8604
     # Set share of socia protection investment financed by the government
-    shock3a = 3 # 100
+    shock3a = 3 #100
     # Set the size of investment in education per year (as bln LCY)
-    shock4 = 8604 # 51757 + 1500 + 426899 + 8604
+    shock4  = 8604 #51757 + 1500 + 426899 + 8604
     # Set share of education spending financed by the government
     shock4a = 91 # 100
     
@@ -553,13 +553,13 @@ if "scenario2_2" in scenarios_to_run:
 
     # Assumptions to set
     # Set the size of additional education spending per year (as bln LCY)
-    shock1 = 159108
+    shock1  = 159108
     # Set if additional spending is from debt (True) or from reallocation (False)
     shock1a = True	
     # Set the year when the shock is first introduced
-    YR1 = 2023
+    YR1     = 2023
     # Enter number of years over which to spread the education investment shock
-    Y3 = 8
+    Y3      = 8
     # Calculatethe overall education spending as % of GDP (take 2026 as a base to get roughly and avergae 5% extra spending)
     educ_spending = 100*shock1 * Y3 / db1['yen'][_ir.yy(2026)].get_data() 
 
@@ -672,9 +672,9 @@ if "scenario3" in scenarios_to_run:
     # Set the year when the shocks are introduced
     YR1 = 2023
     # Enter number of years over when carbon tax is implemented
-    Y1 = 17
+    Y1  = 17
     # Enter number of years over when carbon subsidy is eased
-    Y2 = 2
+    Y2  = 2
 
     # Create the investment periods:
         # 1st investment period
@@ -744,19 +744,19 @@ if "scenario4" in scenarios_to_run:
 
     # Assumptions to set:
     # Set the size of investment in ICT per year between 2021-2025 (as bln LCY)
-    shock1 = 20890
+    shock1  = 20890
 	# Set share of ICT investment financed by the government between 2021-2025 (%)"
     shock1a = 7
     # Set the size of investment in ICT per year between 2026-2030 (as bln LCY)
-    shock2 = 32450
+    shock2  = 32450
 	# Set share of ICT investment financed by the government between 2026-2030 (%)"
     shock2a = 3
     # Set the year when the shock is first introduced
     YR1 = 2021
     # Enter number of years over which to spread the investment shock first period
-    Y3 = 5
+    Y3  = 5
     # Enter number of years over which to spread the investment shock second period
-    Y4 = 5
+    Y4  = 5
 
     # Create the investment periods:
         # 1st investment period
@@ -810,10 +810,10 @@ if "scenario4" in scenarios_to_run:
 
 if "compare" in scenarios_to_run:
 
-    scenario = s_scen3_female # replace me with the scenario
+    scenario  = s_scen3_female # replace me with the scenario
     reference = db_scen3 # replace me with the reference databox
     tolerance = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
-    cmp_year = _ir.yy(2050) # set up the year when you want to compare the scenarios
+    cmp_year  = _ir.yy(2050) # set up the year when you want to compare the scenarios
 
     tmp = {}
     variable_list = reference.get_names()
