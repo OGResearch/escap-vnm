@@ -1,4 +1,16 @@
 [ 
+    {"databases":
+    [
+        {
+            "s1":"s_scen1_female",
+            "name": "Scenario 1"
+        },
+        {
+            "s0":"s1_female",
+            "expression": "Baseline"
+        }
+    ]
+    },
     {"transformations":
     [
         {
@@ -53,6 +65,16 @@
                     "title": "Inflation, percantage point difference",
                     "variable":"hic",
                     "transformation": "pp_dev_cpi"
+                },
+                {
+                    "title": "Employment, % difference from baseline",
+                    "variable":"lnn",
+                    "transformation": "pct_dev"
+                },
+                {
+                    "title": "Real Disposable Income, % difference from baseline",
+                    "variable":"rpdi",
+                    "transformation": "pct_dev"
                 }
             ]
         },
@@ -125,7 +147,7 @@
                     {
                         "title": "Gini Coefficient, % difference from baseline ",
                         "variable":"gini_disp",
-                        "transformation": "pct_dev" 
+                        "transformation": "pp_dev" 
                     },
                     {
                         "title": "Poverty Headcount Ratio (% of population), percantage point difference",
