@@ -8,6 +8,7 @@ import sys
 import scenario_baseline
 import scenario_1
 import scenario_2_1
+import scenario_2_2
 
 
 ir.min_irispie_version_required("0.25.0", )
@@ -17,8 +18,8 @@ ir.min_irispie_version_required("0.25.0", )
 scenarios_to_run = (
     "baseline",
     #"scenario_1",
-    "scenario_2_1",
-    #"scenario2_2",
+    #"scenario_2_1",
+    "scenario_2_2",
     #"scenario3",
     #"scenario4",
     "compare",
@@ -121,6 +122,17 @@ if "scenario_1" in scenarios_to_run:
 if "scenario_2_1" in scenarios_to_run:
 
     sim_db_2_1 = scenario_2_1.run(
+        model, input_db,
+        sim_span, short_tune_span, sim_db_baseline,
+    )
+
+#
+# Scenario 2_2
+#
+
+if "scenario_2_2" in scenarios_to_run:
+
+    sim_db_2_2 = scenario_2_2.run(
         model, input_db,
         sim_span, short_tune_span, sim_db_baseline,
     )
