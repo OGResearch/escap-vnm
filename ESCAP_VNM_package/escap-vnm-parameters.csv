@@ -1,0 +1,24 @@
+Parameter,Baseline
+# Equation for hic,
+c0_hic,0.5
+c1_hic,0.1
+c2_hic,0.4
+c3_hic,0.375
+c4_hic,0.5
+c5_hic,0.6
+c6_hic,0.01
+# Equation for lti,
+c0_lti,0.5
+c1_lti,1
+# Random parameter,
+c0_xtn,21697.5675
+# Female LFPR,
+ss_lrxf,0.87
+c0_lrxf,0.65672
+c1_lrxf,4.4441532
+c2_lrxf,-0.7084184
+c3_lrxf,0.0345780
+c4_lrxf,0.005
+c5_lrxf,37609
+lrxf_sigma_1,100
+lrxf_sigma_2,500

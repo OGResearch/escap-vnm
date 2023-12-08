@@ -20,9 +20,9 @@ ir.min_irispie_version_required("0.25.0", )
 scenarios_to_run = (
     "baseline",
     #"scenario_1_1",
-    #"scenario_1_2",
+    "scenario_1_2",
     #"scenario_2_1",
-    "scenario_2_2",
+    #"scenario_2_2",
     #"scenario_3",
     "compare",
 )

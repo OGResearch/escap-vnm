@@ -90,16 +90,16 @@ def run(model, input_db, sim_span, _, baseline_db, ):
     db['sharee'][tax_span]     = shock6/100
     db['sharex'][tax_span]     = shock7/100
 
-    plan = ir.PlanSimulate(model, sim_span, )
-    plan.swap(sim_span, ("gcarbr", "res_gcarbr"), )
-    plan.swap(sim_span, ("sharee", "res_sharee"), )
-    plan.swap(sim_span, ("sharesp", "res_sharesp"), )
-    plan.swap(sim_span, ("shareh", "res_shareh"), )
-    plan.swap(sim_span, ("sharex", "res_sharex"), )
+    plan2 = ir.PlanSimulate(model, sim_span, )
+    plan2.swap(sim_span, ("gcarbr", "res_gcarbr"), )
+    plan2.swap(sim_span, ("sharee", "res_sharee"), )
+    plan2.swap(sim_span, ("sharesp", "res_sharesp"), )
+    plan2.swap(sim_span, ("shareh", "res_shareh"), )
+    plan2.swap(sim_span, ("sharex", "res_sharex"), )
     #plan.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
 
 
-    sim_db, *_ = model.simulate(db, sim_span, method="period", plan=plan, )
+    sim_db, *_ = model.simulate(db, sim_span, method="period", plan=plan2, )
 
     sim_db.to_sheet(
         OUTPUT_FILE_NAME,
