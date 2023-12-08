@@ -5,6 +5,11 @@ import irispie as ir
 import os
 
 
+OUTPUT_FILE_NAME = os.path.join(
+    "scenario_data_files", "scenario_baseline.csv",
+)
+
+
 def run(model, input_db, sim_span, short_tune_span, ):
 
     db = input_db.copy()
@@ -62,9 +67,10 @@ def run(model, input_db, sim_span, short_tune_span, ):
 
     sim_db, *_ = model.simulate(db, sim_span, method="period", plan=plan, )
 
-    output_file_name = os.path.join("scenario_data_files", "scenario_baseline.csv", )
-    sim_db.to_sheet(output_file_name, )
+    sim_db.to_sheet(
+        OUTPUT_FILE_NAME,
+        description_row=False,
+    )
 
-    return sim_db, output_file_name
-
+    return sim_db
 

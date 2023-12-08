@@ -89,11 +89,17 @@ model.assign(baseline_parameters, )
 
 if "baseline" in scenarios_to_run:
 
-    sim_db_baseline, *_ = scenario_baseline.run(
+    sim_db_baseline = scenario_baseline.run(
         model, input_db,
         sim_span, short_tune_span,
     )
 
+else:
+
+    sim_db_baseline = ir.Databox.from_sheet(
+        scenario_baseline.OUTPUT_FILE_NAME,
+        description_row=False,
+    )
 
 #
 # Scenario 1
@@ -101,7 +107,7 @@ if "baseline" in scenarios_to_run:
 
 if "scenario_1" in scenarios_to_run:
 
-    sim_db_1, *_ = scenario_1.run(
+    sim_db_1 = scenario_1.run(
         model, input_db,
         sim_span, short_tune_span, sim_db_baseline,
     )
