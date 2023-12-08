@@ -19,7 +19,7 @@ def run(model, input_db, sim_span, _, baseline_db, ):
     db = input_db.copy()
     res_names = (n for n in model.get_names() if n.startswith("res_"))
     for n in res_names:
-         db[n] = baseline_db[n]
+         db[n] = baseline_db[n].copy()
 
 
     #
