@@ -5,6 +5,9 @@ import irispie as ir
 import os
 
 
+SCENARIO_NAME = "Scenario 2_2 Education investment"
+
+
 OUTPUT_FILE_NAME = os.path.join(
     "scenario_data_files", "scenario_2_2.csv",
 )
