@@ -15,7 +15,7 @@ import utils
 import chartpacks
 
 
-ir.min_irispie_version_required("0.25.0", )
+ir.min_irispie_version_required("0.28.0", )
 
 
 # Setup which scenarios to run
