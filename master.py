@@ -1,63 +1,27 @@
+# Master file for running ESCAP scenarios
 
 import irispie as ir
-import scipy as sp
-import numpy as np
-import utils as ut
-import csv
+
+import utils
 import sys
+
+import scenario_baseline
+import scenario_1
 
 
 ir.min_irispie_version_required("0.25.0", )
 
+
 # Setup which scenarios to run
 scenarios_to_run = (
     "baseline",
-    "scenario1",
+    "scenario_1",
     "scenario2_1",
     #"scenario2_2",
     #"scenario3",
     #"scenario4",
     "compare",
 )
-
-#
-# Read input data
-#
-
-def name_row_transform(s):
-    s = s.lower()
-    s = s.replace("obs", "__yearly__")
-    s = s.replace("vnm_", "")
-    s = s.replace("_0", "")
-    s = s.replace("$", "_S")
-    #
-    # Add eviews shocks (tunes from eviews baseline)
-    s = s.replace("_a", "_eviews")
-    #
-    # For scenario building (without female)
-    for n in (
-        "_rca", "_ntp", "_edu",
-        # "_ct", "_ict",
-        "_ran", "_ntn", "_edn", "_ctn", "_ic2"
-    ):
-        s = s.replace(n, "")
-    #
-    return s
-
-
-db = ir.Databox.from_sheet(
-    "result_baseline_female.csv", # result_baseline_correct.csv, result_baseline_female
-    name_row_transform=name_row_transform,
-    description_row=False,
-)
-
-db_res = ir.Databox.from_sheet(
-    "result_residuals_female.csv", # result_residuals1.csv, result_residuals_female
-    name_row_transform=name_row_transform,
-    description_row=False,
-)
-
-db.update(db_res, )
 
 
 
@@ -74,91 +38,40 @@ short_tune_span = start_sim >> end_short_tune
 
 
 #
-# Needed for female model development
+# Read input databox
 #
 
-db['lrxf_switch'] =  ir.Series(dates=ir.yy(2000)>>end_sim, values=0, )
+
+input_db = ir.Databox.from_sheet(
+    "result_baseline_female.csv",
+    name_row_transform=utils.rename_input_data,
+    description_row=False,
+)
+
+db_res = ir.Databox.from_sheet(
+    "result_residuals_female.csv",
+    name_row_transform=utils.rename_input_data,
+    description_row=False,
+)
+
+input_db.update(db_res, )
 
 
 #
-# Rescaling exercise
+# Technical variable for female model
 #
 
-# import the description file
-def csv_to_dict(csv_file_path):
-    result_dict = {}
+input_db['lrxf_switch'] =  ir.Series(dates=ir.yy(2000)>>end_sim, values=0, )
 
-    with open(csv_file_path, 'r') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-
-
-        for row in csv_reader:
-            # Assuming the first column contains unique keys
-            key = row.pop(csv_reader.fieldnames[0])
-            result_dict[key] = row
-
-    return result_dict
-
-
-csv_file_path = 'variable_description.csv'
-db_desc = csv_to_dict(csv_file_path)
-
-prefix_to_remove = 'VNM_'
-db_desc = {key.replace(prefix_to_remove, '', 1): value for key, value in db_desc.items()}
-
-# Filter the variables to rescale - it is not nescessarly to do, model is working anyway
-# if you turn this on adjust the c0_xtn variable in the parameter file
-
-#unit_to_filter = 'bln LCY'
-
-# Create a list to store keys that meet the condition
-# filtered_keys = []
-
-# # Iterate over the dictionary items
-# for key, value in db_desc.items():
-#     if 'unit' in value and value['unit'] == unit_to_filter:
-#         filtered_keys.append(key)
-
-# # Rescale the bln LCY variables (and their residuals) and exchange rate variable
-# for variable_name in filtered_keys:
-#     column_name = variable_name
-#     column_name_eviews = variable_name + '_eviews'
-#     column_name_eviews2 = variable_name + 'b'
-
-#     if column_name.lower() in db.get_names():
-#         print(column_name)
-#         db[column_name.lower()] = db[column_name.lower()]/1000
-#     if column_name_eviews.lower() in db.get_names():
-#         print(column_name_eviews)
-#         db[column_name_eviews.lower()] = db[column_name_eviews.lower()]/1000
-#     if column_name_eviews2.lower() in db.get_names():
-#         print(column_name_eviews2)
-#         db[column_name_eviews2.lower()] = db[column_name_eviews2.lower()]/1000
-
-    #if abs(db[variable_name.lower()](ir.yy(2020))) < 100:
-    #    print(variable_name)
-
-#db['exr'] = db['exr']/1000
-#db['exr_eviews'] = db['exr_eviews']/1000
 
 
 #
 # Create model object with user funtions
 #
 
-gamma_inv = sp.stats.gamma(0.5, ).ppf
-
-lognorm_cdf = \
-    lambda x, mu, sigma: sp.stats.lognorm.cdf(x, s=sigma, scale=np.exp(mu), )
-
-context = {
-    "gamma_inv": gamma_inv,
-    "lognorm_cdf": lognorm_cdf,
-}
-
-m = ir.Simultaneous.from_file(
+model = ir.Simultaneous.from_file(
     "escap-vnm.model",
-    context=context,
+    context=utils.function_context,
     deterministic=True,
 )
 
@@ -166,225 +79,35 @@ m = ir.Simultaneous.from_file(
 # Read in and assign baseline parameters
 #
 
-baseline_parameters = ut.read_parameters_from_csv("escap-vnm-parameters.csv", )
-
-m.assign(baseline_parameters, )
-
-
-#
-# Baseline simulation
-#
-
-db0 = db.copy()
-#s0, *_ = m.simulate(db0, sim_span, method="period", )
-#s0.to_sheet("s0.csv", )
+baseline_parameters = utils.read_parameters_from_csv("escap-vnm-parameters.csv", )
+model.assign(baseline_parameters, )
 
 
 #
-# Simulation plan in baseline scenario
+# Baseline
 #
 
 if "baseline" in scenarios_to_run:
-    p1 = ir.PlanSimulate(m, sim_span, )
 
-    # Female LFPR block
-    p1.swap(sim_span, ("popwaf", "res_popwaf"), ) # should be tuned until 2050
-    # p1.swap(sim_span, ("lrxf", "res_lrxf"), ) # exogenized temporarily until FLFPR formula is ready
-    p1.swap(sim_span, ("skrat", "res_skrat"), ) # education variable, should be exogenized always
-
-    # GDP items
-    p1.swap(short_tune_span, ("gcr", "res_gcr"), )
-    p1.swap(short_tune_span, ("pcr", "res_pcr"), )
-    #p1.swap(short_tune_span, ("itr", "res_ipr"), )
-    p1.swap(short_tune_span, ("ipr", "res_ipr"), )
-    p1.swap(short_tune_span, ("igr", "res_igr"), )
-    p1.swap(short_tune_span, ("scr", "res_scr"), )
-    p1.swap(short_tune_span, ("xtr", "res_xtr"), )
-    p1.swap(short_tune_span, ("mtr", "res_mtr"), )
-    # Budget expenditure items
-    # p1.swap(sim_span, ("exp", "res_ogi"), ) # exp is an identity withouth shock, enrun_genizing one subitem of exp // might want to change this
-    p1.swap(short_tune_span, ("expe", "res_expe"), )
-    p1.swap(short_tune_span, ("exph", "res_exph"), )
-    p1.swap(short_tune_span, ("expsp", "res_expsp"), )
-    p1.swap(short_tune_span, ("ogc", "res_ogc"), )
-    p1.swap(short_tune_span, ("ogi", "res_ogi"), )
-    p1.swap(short_tune_span, ("gip", "res_gip"), )
-    # Budget revenue items
-    # p1.swap(sim_span, ("exp", "res_ogi"), ) # exp is an identity withouth shock, enrun_genizing one subitem of exp // might want to change this
-    p1.swap(short_tune_span, ("tax", "res_taxr"), )
-    p1.swap(short_tune_span, ("ctax", "res_ctaxr"), )
-    p1.swap(short_tune_span, ("itax", "res_itaxr"), )
-    p1.swap(short_tune_span, ("gtrade", "res_gtrader"), )
-    #p1.swap(sim_span, ("revg", "res_revg"), ) this one we treat as fully exogenous
-    p1.swap(short_tune_span, ("gcom", "res_gcom"), )
-    p1.swap(short_tune_span, ("goth", "res_goth"), )
-
-    # Other variables
-    p1.swap(sim_span, ("eff", "res_eff"), ) # should be tuned until 2050
-    p1.swap(sim_span, ("popt", "res_popt"), ) # should be tuned until 2050
-    p1.swap(sim_span, ("popwa", "res_popwa"), ) # should be tuned until 2050
-    p1.swap(short_tune_span, ("yed", "res_yed"), )
-    p1.swap(short_tune_span, ("yft", "res_yft"), )
-    p1.swap(short_tune_span, ("exr", "res_exr"), )
-    p1.swap(short_tune_span, ("hic", "res_hic"), )
-    p1.swap(short_tune_span, ("gdn", "res_gdn"), )
-    p1.swap(short_tune_span, ("glnt", "res_glnt"), )
-
-    # Exogenize these ranrun_m extra baseline variables
-    p1.swap(sim_span, ("expeb", "res_expeb"), )
-    p1.swap(sim_span, ("exphb", "res_exphb"), )
-    p1.swap(sim_span, ("expspb", "res_expspb"), )
-    p1.swap(sim_span, ("gcarbb", "res_gcarbb"), )
-
-    # Equivalent to:
-    # p1.exogenize(start_sim, ("hic", "pcr"), )
-    # p1.endogenize(start_sim, ("res_hic", "res_pcr"), )
-
-    db1 = db.copy()
-
-    s1_female, *_ = m.simulate(db1, sim_span, method="period", plan=p1, )
-    s1_female.to_sheet("s1_female.csv", )
-
+    sim_db_baseline, *_ = scenario_baseline.run(
+        model, input_db,
+        sim_span, short_tune_span,
+    )
 
 
 #
-# Scenario builder
-#
-
-baseline_db = s1_female
-
 # Scenario 1
+#
 
-if "scenario1" in scenarios_to_run:
+if "scenario_1" in scenarios_to_run:
 
-    # Scenario 1 assumption
-    db_asu = ir.Databox.from_sheet(
-        "Scenarios_with_female/Scenario_1/result_scen1_asu.csv",
-        name_row_transform=name_row_transform,
-        description_row=False,
+    sim_db_1, *_ = scenario_1.run(
+        model, input_db,
+        sim_span, short_tune_span, sim_db_baseline,
     )
 
-    # Scenario 1 result for comparison
-    db_scen1 = ir.Databox.from_sheet(
-        "Scenarios_with_female/Scenario_1/result_scen1.csv",
-        name_row_transform=name_row_transform,
-        description_row=False,
-    )
 
-    # create the fcast database
-    db2 = db1.copy()
-    #db2.update(db_asu) #add the scenario assumpions from eview to the db, not needed if you set up the tunes below
-
-    # add baseline shock to the simulation
-    res_variable_list = [
-        variable_name
-        for variable_name in baseline_db.get_names()
-        if variable_name.startswith('res')
-    ]
-
-    db2x = db1.copy()
-
-    res_names = (n for n in m.get_names() if n.startswith("res_"))
-    for n in res_names:
-         db2x[n] = baseline_db[n]
-
-    sys.exit()
-
-    #
-    # Scenario 1 tunes
-    #
-
-    # Assumptions to set
-    # Set the size of investment in renewables per year until 2030 (bln USD)
-    shock1 = 13.5
-    # Set the size of investment in renewables per year from 2030 until 2050 (bln USD)"
-    shock2 = 23
-    # Initial Renewable Energy capacity
-    initial_rc = db1['rc'][ir.yy(2021)].get_data()
-    # Set the size of the renewable energy capacity in 2030 (Exojoules)
-    shock3 = 1.26
-    # Set the size of the renewable energy capacity in 2050 (Exojoules)
-    shock4 = 6.5
-    # Set share of renewable investment financed by the government
-    shock5 = 100
-
-    # Set the year when the shock is first introduced
-    YR1 = 2021
-    # Enter number of years over which to spread the investment shock first period
-    Y3 = 9
-    # Enter number of years over which to spread the investment shock second period
-    Y4 = 20
-
-    # Create the investment periods:
-        # 1st investment period
-    start_date1          = ir.yy(YR1)
-    end_date1            = ir.yy(YR1)+Y3
-    investment_span_1    = start_date1 >> end_date1
-        # 2nd investment period
-    start_date2          = ir.yy(YR1)+Y3+1
-    end_date2            = ir.yy(YR1)+Y3+Y4
-    investment_span_2    = start_date2 >> end_date2
-        # end: after investment period - not needed, this investment scenario is running until end_sim
-
-    # Scenario 1 tunes:
-        # Add shocks
-    #db2['res_ipr']      = db_asu['ipr_eviews'] + baseline_db['res_ipr']
-    db2['res_ipr'][investment_span_1] = baseline_db['res_ipr'] + db1['ipr_eviews'] + 0.18*((1-shock5/100)*shock1)/db1['yen_S']*db1['yer']/db1['ipr']
-    db2['res_ipr'][investment_span_2] = baseline_db['res_ipr'] + db1['ipr_eviews'] + 0.05*((1-shock5/100)*shock2)/db1['yen_S']*db1['yer']/db1['ipr']
-    db2['ipr_eviews']                 = 0
-
-    #db2['res_rc']       = db_asu['rc_eviews'] + baseline_db['res_rc']
-    db2['res_rc'][investment_span_1]  = baseline_db['res_rc'] + db1['rc_eviews'] + 0.3*(ir.log(shock3) - ir.log(initial_rc))/Y3
-    db2['res_rc'][investment_span_2]  = baseline_db['res_rc'] + db1['rc_eviews'] + 1.1*(ir.log(shock4) - ir.log(shock3))/Y4
-    db2['rc_eviews']                  = 0
-
-        # Exogenized variables
-    db2['ogi'][investment_span_1] = db1['ogi'] + db1['exr'] * shock1 * shock5/100
-    db2['ogi'][investment_span_2] = db1['ogi'] + db1['exr'] * shock2 * shock5/100
-
-    db2['pr'] = db1['pr'].copy()
-
-    for i in list(investment_span_1):
-        pr_lag       = db2['pr'][i-1].get_data()
-        pr_base      = db1['pr'][i].get_data()
-        pr_base_lag  = db1['pr'][i-1].get_data()
-        yen_S        = db1['yen_S'][i].get_data()
-        db2['pr'][i] = (pr_lag)*(pr_base/pr_base_lag) - 0.2*(shock1/yen_S)
-
-    for i in list(investment_span_2):
-        pr_lag       = db2['pr'][i-1].get_data()
-        pr_base      = db1['pr'][i].get_data()
-        pr_base_lag  = db1['pr'][i-1].get_data()
-        yen_S        = db1['yen_S'][i].get_data()
-        db2['pr'][i] = (pr_lag)*(pr_base/pr_base_lag) - 0.2*(shock2/yen_S)
-
-    # # # other and better way of handeling the sequential shock (db_temp is not working properly)
-    # s = """
-    # !transition-variables
-    #     !list(`lhs)
-    # !exogenous-variables
-    #     yen_S
-    #     pr_base
-    # !transition-equations
-    #     pr`lhs = pr[-1]*(pr_base/pr_base[-1]) - 0.2*shock1`par/yen_S[-1];
-    # !parameters
-    #     !list(`par)
-    # """
-    # db_temp =  db1.copy()
-    # db_temp['pr_base'] = db_temp['pr'].copy()
-
-    # shock_param = {'shock1': shock1}
-    # m.assign(shock_param, )
-    # m = ir.Sequential.from_string(s,)
-    # tmp_pr, *_ = m.simulate(db_temp, investment_span_1)
-
-    p2 = ir.PlanSimulate(m, sim_span, )
-    p2.swap(sim_span, ("ogi", "res_ogi"), )
-    p2.swap(sim_span, ("pr", "res_pr"), )
-    # p2.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
-
-    s_scen1_female, *_ = m.simulate(db2, sim_span, method="period", plan=p2, )
-
+sys.exit()
 
 # Scenario 2_1
 
@@ -392,20 +115,20 @@ if "scenario2_1" in scenarios_to_run:
     # Scenario 2_1 assumption
     db_asu2_1 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_2_1/result_scen2_1_asu.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # Scenario 2_1 result for comparison
     db_scen2_1 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_2_1/result_scen2_1.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # create the fcast database
     db2_1 = db1.copy()
-    # db2_1.update(db_asu2_1) #add the scenario assumpions to the db
+    # db2_1.update(db_asu2_1) #add the scenario assumpions to the input_db
 
     # add baseline shock to the simulation
     res_variable_list = [variable_name for variable_name in baseline_db.get_names() if variable_name.startswith('res')]
@@ -524,7 +247,7 @@ if "scenario2_1" in scenarios_to_run:
         db2_1['skrat'][i] = (skrat_base_lag)*(skrat_base/skrat_base_lag)
 
 
-    p2 = ir.PlanSimulate(m, sim_span, )
+    p2 = ir.PlanSimulate(model, sim_span, )
     p2.swap(sim_span, ("ogi", "res_ogi"), )
     p2.swap(sim_span, ("exph", "res_exph"), )
     p2.swap(sim_span, ("expsp", "res_expsp"), )
@@ -533,7 +256,7 @@ if "scenario2_1" in scenarios_to_run:
     p2.swap(sim_span, ("skrat", "res_skrat"), )
 
 
-    s_scen2_1_female, *_ = m.simulate(db2_1, sim_span, method="period", plan=p2, )
+    s_scen2_1_female, *_ = model.simulate(db2_1, sim_span, method="period", plan=p2, )
     s_scen2_1_female.to_sheet("s_scen2_1_female.csv", )
 
 
@@ -546,20 +269,20 @@ if "scenario2_2" in scenarios_to_run:
     # Scenario 2_2 assumptions
     db_asu2_2 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_2_2/result_scen2_2_asu.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # Scenario 2_2 result for comparison
     db_scen2_2 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_2_2/result_scen2_2.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # create the fcast database
     db2_2 = db1.copy()
-    #db2_2.update(db_asu2_2) #add the scenario assumpions to the db
+    #db2_2.update(db_asu2_2) #add the scenario assumpions to the input_db
 
     # add baseline shock to the simulation
     res_variable_list = [variable_name for variable_name in baseline_db.get_names() if variable_name.startswith('res')]
@@ -603,7 +326,7 @@ if "scenario2_2" in scenarios_to_run:
     db2_2['gini_disp_eviews'][start_date1 >> end_sim]        = 0
 
         # exogenize additional variables
-    p3 = ir.PlanSimulate(m, sim_span, )
+    p3 = ir.PlanSimulate(model, sim_span, )
 
        # Exogenize variables
     if shock1a: # extra investment in educ from debt
@@ -635,7 +358,7 @@ if "scenario2_2" in scenarios_to_run:
     #p3.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
     p3.swap(sim_span, ("skrat", "res_skrat"), )
 
-    s_scen2_2_female, *_ = m.simulate(db2_2, sim_span, method="period", plan=p3, )
+    s_scen2_2_female, *_ = model.simulate(db2_2, sim_span, method="period", plan=p3, )
     s_scen2_2_female.to_sheet("s_scen2_2_female.csv", )
 
 
@@ -645,20 +368,20 @@ if "scenario3" in scenarios_to_run:
     # Scenario 3 assumptions
     db_asu3 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_3/result_scen3_asu.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # Scenario 3 result for comparison
     db_scen3 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_3/result_scen3.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # create the fcast database
     db3 = db1.copy()
-    db3.update(db_asu3) #add the scenario assumpions to the db
+    db3.update(db_asu3) #add the scenario assumpions to the input_db
 
     # add baseline shock to the simulation
     res_variable_list = [variable_name for variable_name in baseline_db.get_names() if variable_name.startswith('res')]
@@ -719,7 +442,7 @@ if "scenario3" in scenarios_to_run:
     db3['sharee'][tax_span]     = shock6/100
     db3['sharex'][tax_span]     = shock7/100
 
-    p4 = ir.PlanSimulate(m, sim_span, )
+    p4 = ir.PlanSimulate(model, sim_span, )
     p4.swap(sim_span, ("gcarbr", "res_gcarbr"), )
     p4.swap(sim_span, ("sharee", "res_sharee"), )
     p4.swap(sim_span, ("sharesp", "res_sharesp"), )
@@ -728,7 +451,7 @@ if "scenario3" in scenarios_to_run:
     #p4.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
 
 
-    s_scen3_female, *_ = m.simulate(db3, sim_span, method="period", plan=p4, )
+    s_scen3_female, *_ = model.simulate(db3, sim_span, method="period", plan=p4, )
     s_scen3_female.to_sheet("s_scen3_female.csv", )
 
 # Scenario 4
@@ -737,20 +460,20 @@ if "scenario4" in scenarios_to_run:
     # Scenario 4 assumptions
     db_asu4 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_4/result_scen4_asu.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # Scenario 4 result for comparison
     db_scen4 = ir.Databox.from_sheet(
         "Scenarios_with_female/Scenario_4/result_scen4.csv",
-        name_row_transform=name_row_transform,
+        name_row_transform=utils.rename_input_data,
         description_row=False,
     )
 
     # create the fcast database
     db4 = db1.copy()
-    # db4.update(db_asu4) #add the scenario assumpions to the db, not needed if you set up the tunes below
+    # db4.update(db_asu4) #add the scenario assumpions to the input_db, not needed if you set up the tunes below
 
     # add baseline shock to the simulation
     res_variable_list = [variable_name for variable_name in baseline_db.get_names() if variable_name.startswith('res')]
@@ -815,12 +538,12 @@ if "scenario4" in scenarios_to_run:
     db4['ogi'][span_end]          = db1['ogi']
     db4['rel_red']                = db1['rel_red']
 
-    p4 = ir.PlanSimulate(m, sim_span, )
+    p4 = ir.PlanSimulate(model, sim_span, )
     p4.swap(sim_span, ("ogi", "res_ogi"), )
     p4.swap(sim_span, ("rel_red", "res_rel_red"), )
     #p4.swap(sim_span, ("lrxf", "res_lrxf"), )  # it is here to check how irispie LRXF formula works
 
-    s_scen4_female, *_ = m.simulate(db4, sim_span, method="period", plan=p4, )
+    s_scen4_female, *_ = model.simulate(db4, sim_span, method="period", plan=p4, )
     s_scen4_female.to_sheet("s_scen4_female.csv", )
 
 #

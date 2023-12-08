@@ -18,15 +18,15 @@
             "expression": "100*(s1['variable']/s0['variable'])-100"
         },
         {
-            "transformation":"level",
+            "transformation":"100_log",
             "expression": "100*log(s1['variable'])"
         },
         {
-            "transformation":"pp_dev",
+            "transformation":"diff",
             "expression": "s1['variable'] - s0['variable']"
         },
         {
-            "transformation":"pp_dev_cpi",
+            "transformation":"diff_pct",
             "expression": "pct(s1['variable']) - pct(s0['variable'])"
         },
         {
@@ -44,7 +44,7 @@
                 {
                     "title": "Real GDP",
                     "variable":"yer",
-                    "transformation": "level"
+                    "transformation": "100_log"
                 }, 
                 {
                     "title": "Real GDP, % difference from baseline",
@@ -64,7 +64,7 @@
                 {
                     "title": "Inflation, percantage point difference",
                     "variable":"hic",
-                    "transformation": "pp_dev_cpi"
+                    "transformation": "diff_pct"
                 },
                 {
                     "title": "Employment, % difference from baseline",
@@ -147,12 +147,12 @@
                     {
                         "title": "Gini Coefficient, % difference from baseline ",
                         "variable":"gini_disp",
-                        "transformation": "pp_dev" 
+                        "transformation": "diff" 
                     },
                     {
                         "title": "Poverty Headcount Ratio (% of population), percantage point difference",
                         "variable":"head55",
-                        "transformation": "pp_dev" 
+                        "transformation": "diff" 
                     }
                 ]
         }
