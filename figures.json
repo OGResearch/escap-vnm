@@ -18,20 +18,12 @@
             "expression": "100*(s1['variable']/s0['variable'])-100"
         },
         {
-            "transformation":"100_log",
-            "expression": "100*log(s1['variable'])"
-        },
-        {
             "transformation":"diff",
             "expression": "s1['variable'] - s0['variable']"
         },
         {
             "transformation":"diff_pct",
             "expression": "pct(s1['variable']) - pct(s0['variable'])"
-        },
-        {
-            "transformation":"level_cmp",
-            "expression": "(s1['variable'] | s0['variable'])"
         }
     ]
     },
@@ -41,11 +33,6 @@
         "group_title": "Real economic activity",
         "charts": 
             [
-                {
-                    "title": "Real GDP",
-                    "variable":"yer",
-                    "transformation": "100_log"
-                }, 
                 {
                     "title": "Real GDP, % difference from baseline",
                     "variable":"yer",
@@ -121,12 +108,12 @@
                 {
                     "title": "Fiscal Balance (% of GDP)",
                     "variable":"glnratio",
-                    "transformation": "level_cmp" 
+                    "transformation": null
                 },
                 {
                     "title": "Public Debt (% of GDP)",
                     "variable":"gdnratio",
-                    "transformation": "level_cmp" 
+                    "transformation": null
                 },
                 {
                     "title": "Government Expenditure, % difference from baseline",

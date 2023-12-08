@@ -2,7 +2,6 @@
 
 import irispie as ir
 
-import utils
 import sys
 
 import scenario_baseline
@@ -12,6 +11,9 @@ import scenario_2_1
 import scenario_2_2
 import scenario_3
 
+import utils
+import chartpacks
+
 
 ir.min_irispie_version_required("0.25.0", )
 
@@ -19,14 +21,15 @@ ir.min_irispie_version_required("0.25.0", )
 # Setup which scenarios to run
 scenarios_to_run = (
     "baseline",
-    #"scenario_1_1",
-    #"scenario_1_2",
-    #"scenario_2_1",
+    "scenario_1_1",
+    "scenario_1_2",
+    "scenario_2_1",
     "scenario_2_2",
-    #"scenario_3",
-    "compare",
+    "scenario_3",
 )
 
+show_charts = True
+# show_charts = False
 
 
 #
@@ -39,6 +42,19 @@ end_sim = ir.yy(2050)
 end_short_tune = ir.yy(2026)
 sim_span = start_sim >> end_sim
 short_tune_span = start_sim >> end_short_tune
+
+chart_span = start_sim - 5 >> end_sim
+highlight_span = chart_span.start_date >> start_sim - 1
+
+
+#
+# Read the basic chartpack
+#
+
+basic_chartpack = chartpacks.basic_chartpack
+basic_chartpack.span = chart_span
+basic_chartpack.highlight = highlight_span
+basic_chartpack.show_charts = show_charts
 
 
 #
@@ -70,7 +86,7 @@ input_db['lrxf_switch'] =  ir.Series(dates=ir.yy(2000)>>end_sim, values=0, )
 
 
 #
-# Create model object with user funtions
+# Create model object
 #
 
 model = ir.Simultaneous.from_file(
@@ -78,6 +94,7 @@ model = ir.Simultaneous.from_file(
     context=utils.function_context,
     deterministic=True,
 )
+
 
 #
 # Read in and assign baseline parameters
@@ -87,9 +104,10 @@ baseline_parameters = utils.read_parameters_from_csv("escap-vnm-parameters.csv",
 model.assign(baseline_parameters, )
 
 
-#
+#==============================================================================
 # Baseline
-#
+#==============================================================================
+
 
 if "baseline" in scenarios_to_run:
 
@@ -105,9 +123,11 @@ else:
         description_row=False,
     )
 
-#
+
+#==============================================================================
 # Scenario 1_1: Renewable energy investment scenario
-#
+#==============================================================================
+
 
 if "scenario_1_1" in scenarios_to_run:
 
@@ -116,9 +136,18 @@ if "scenario_1_1" in scenarios_to_run:
         sim_span, short_tune_span, sim_db_baseline,
     )
 
-#
+    chart_db = sim_db_1_1.copy()
+    chart_db.merge(sim_db_baseline,  )
+
+    ch = basic_chartpack.copy()
+    ch.format_figure_titles(SCENARIO_NAME=scenario_1_1.SCENARIO_NAME, )
+    ch.plot(chart_db, )
+
+
+#===============================================================================
 # Scenario 1_2: Carbon Tax scenario
-#
+#===============================================================================
+
 
 if "scenario_1_2" in scenarios_to_run:
 
@@ -127,9 +156,18 @@ if "scenario_1_2" in scenarios_to_run:
         sim_span, short_tune_span, sim_db_baseline,
     )
 
-#
+    chart_db = sim_db_1_2.copy()
+    chart_db.merge(sim_db_baseline,  )
+
+    ch = basic_chartpack.copy()
+    ch.format_figure_titles(SCENARIO_NAME=scenario_1_2.SCENARIO_NAME, )
+    ch.plot(chart_db, )
+
+
+#===============================================================================
 # Scenario 2_1: National Target Program scenario
-#
+#===============================================================================
+
 
 if "scenario_2_1" in scenarios_to_run:
 
@@ -138,9 +176,18 @@ if "scenario_2_1" in scenarios_to_run:
         sim_span, short_tune_span, sim_db_baseline,
     )
 
-#
+    chart_db = sim_db_2_1.copy()
+    chart_db.merge(sim_db_baseline,  )
+
+    ch = basic_chartpack.copy()
+    ch.format_figure_titles(SCENARIO_NAME=scenario_2_1.SCENARIO_NAME, )
+    ch.plot(chart_db, )
+
+
+#===============================================================================
 # Scenario 2_2: Education investment scenario
-#
+#===============================================================================
+
 
 if "scenario_2_2" in scenarios_to_run:
 
@@ -149,10 +196,18 @@ if "scenario_2_2" in scenarios_to_run:
         sim_span, short_tune_span, sim_db_baseline,
     )
 
+    chart_db = sim_db_2_2.copy()
+    chart_db.merge(sim_db_baseline,  )
 
-#
+    ch = basic_chartpack.copy()
+    ch.format_figure_titles(SCENARIO_NAME=scenario_2_2.SCENARIO_NAME, )
+    ch.plot(chart_db, )
+
+
+#===============================================================================
 # Scenario 3: ICT investment scenario
-#
+#===============================================================================
+
 
 if "scenario_3" in scenarios_to_run:
 
@@ -160,39 +215,12 @@ if "scenario_3" in scenarios_to_run:
         model, input_db,
         sim_span, short_tune_span, sim_db_baseline,
     )
-    
 
-sys.exit()
+    chart_db = sim_db_3.copy()
+    chart_db.merge(sim_db_baseline,  )
 
+    ch = basic_chartpack.copy()
+    ch.format_figure_titles(SCENARIO_NAME=scenario_3.SCENARIO_NAME, )
+    ch.plot(chart_db, )
 
-#
-# Compare scenarios
-#
-
-if "compare" in scenarios_to_run:
-
-    scenario  = sim_db_3 # replace me with the scenario
-    reference = sim_db_baseline # replace me with the reference databox
-    tolerance = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
-    cmp_year  = ir.yy(2050) # set up the year when you want to compare the scenarios
-
-    tmp = {}
-    variable_list = reference.get_names()
-
-    discrep_db = {
-        name: (scenario[name] / reference[name]) * 100 - 100
-        for name in scenario.keys()
-        if name in reference.keys()
-    }
-
-    messages = [
-        f'Variable {name}: {discrep_db[name](cmp_year)} (value > {tolerance} in {cmp_year})'
-        for name in discrep_db.keys()
-        if abs(discrep_db[name](cmp_year)) > tolerance
-    ]
-
-    if messages:
-        print("\n".join(messages))
-    else:
-        print("No discrepancies found")
 

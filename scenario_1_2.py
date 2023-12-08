@@ -5,6 +5,8 @@ import irispie as ir
 import os
 
 
+SCENARIO_NAME = "Scenario 1_2 Carbon tax"
+
 OUTPUT_FILE_NAME = os.path.join(
     "scenario_data_files", "scenario_1_2.csv",
 )

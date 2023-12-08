@@ -1,8 +1,11 @@
-# Scenario 2_1 runner: National Target Program scenario
+# Scenario 2_1 runner: National target program scenario
 
 
 import irispie as ir
 import os
+
+
+SCENARIO_NAME = "Scenario 2_1 National target program"
 
 
 OUTPUT_FILE_NAME = os.path.join(
