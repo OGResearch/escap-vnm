@@ -24,6 +24,8 @@ chartpack_transforms = {
 basic_chartpack = ir.Chartpack(
     transforms=chartpack_transforms,
     tiles=(3, 2),
+    reverse_plot_order=True,
+    legend=("Scenario", "Baseline", )
 )
 
 basic_chartpack.add_figure("{SCENARIO_NAME}: Real economic activity", )
