@@ -14,6 +14,10 @@ import scenario_3
 import utils
 import chartpacks
 
+#import plotly.graph_objects as _pg
+#import plotly.subplots as _ps
+import plotly.io as _pio
+_pio.renderers.default = "browser"
 
 ir.min_irispie_version_required("0.28.0", )
 

@@ -14,12 +14,12 @@ OUTPUT_FILE_NAME = os.path.join(
 
 
 def run(model, input_db, sim_span, _, baseline_db, ):
-  
+    
     # Import the raw database and residuals from the baseline scenario
     db = input_db.copy()
     res_names = (n for n in model.get_names() if n.startswith("res_"))
     for n in res_names:
-         db[n] = baseline_db[n]
+         db[n] = baseline_db[n].copy()
 
     #
     # Scenario 2_1 tunes
