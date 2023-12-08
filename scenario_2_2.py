@@ -1,4 +1,4 @@
-# Scenario 2_2 runner: xxx
+# Scenario 2_2 runner: Education investment scenario
 
 
 import irispie as ir
@@ -12,22 +12,7 @@ OUTPUT_FILE_NAME = os.path.join(
 
 def run(model, input_db, sim_span, _, baseline_db, ):
 
-    # if "scenario2_2" in scenarios_to_run:
-    # # Scenario 2_2 assumptions
-    # db_asu2_2 = ir.Databox.from_sheet(
-    #     "Scenarios_with_female/Scenario_2_2/result_scen2_2_asu.csv",
-    #     name_row_transform=utils.rename_input_data,
-    #     description_row=False,
-    # )
-
-    # # Scenario 2_2 result for comparison
-    # db_scen2_2 = ir.Databox.from_sheet(
-    #     "Scenarios_with_female/Scenario_2_2/result_scen2_2.csv",
-    #     name_row_transform=utils.rename_input_data,
-    #     description_row=False,
-    # )
-
-
+    # Import the raw database and residuals from the baseline scenario
     db = input_db.copy()
     res_names = (n for n in model.get_names() if n.startswith("res_"))
     for n in res_names:
@@ -70,29 +55,41 @@ def run(model, input_db, sim_span, _, baseline_db, ):
 
     # Scenario 2_2 tunes:
         # Add shocks
-    #db['res_techl']         = baseline_db['res_techl'] + db_asu2_2['techl_eviews']
-    db['res_techl'][investment_span_1]                     = baseline_db['res_techl'] + input_db['techl_eviews'] + 0.001*shock1/input_db['yen']*100
-    db['res_techl'][span_end]                              = baseline_db['res_techl'] + input_db['techl_eviews']
+    
+    # technology shock
+    db['res_techl'][investment_span_1]                     = baseline_db['res_techl'] \
+        + input_db['techl_eviews'] + 0.001*shock1/input_db['yen']*100
+    
+    db['res_techl'][span_end]                              = baseline_db['res_techl'] \
+        + input_db['techl_eviews']
+   
     db['techl_eviews'][start_date1 >> end_sim]            = 0
 
-    #db['res_gini_disp']  = baseline_db['res_gini_disp'] + db_asu2_2['gini_disp_eviews']
-    db['res_gini_disp'][start_date1 >> end_date1 + 1 + 25] = baseline_db['res_gini_disp'] + input_db['gini_disp_eviews'] - 0.006*(shock1)/input_db['yen']*100
+    # inequality shock
+    db['res_gini_disp'][start_date1 >> end_date1 + 1 + 25] = baseline_db['res_gini_disp'] \
+        + input_db['gini_disp_eviews'] - 0.006*(shock1)/input_db['yen']*100
+   
     db['gini_disp_eviews'][start_date1 >> end_sim]        = 0
 
-        # exogenize additional variables
+        # Exogenize additional variables
     plan = ir.PlanSimulate(model, sim_span, )
-
-       # Exogenize variables
-       
+    
     if shock1a: # extra investment in educ from debt
         db['ogc'][investment_span_1] = input_db['ogc'] + shock1
+        
         db['ogc'][span_end]          = input_db['ogc']
+        
         plan.swap(start_date1 >> end_sim, ("ogc", "res_ogc"), )
+    
     else: # extra investment in educ from reallocation of other investment
         db['ogc'][investment_span_1] = input_db['ogc'] + shock1
+        
         db['ogc'][span_end]          = input_db['ogc']
+        
         db['ogi'][investment_span_1] = input_db['ogi'] - shock1
+        
         db['ogi'][span_end]          = input_db['ogi']
+        
         plan.swap(start_date1 >> end_sim, ("ogi", "res_ogi"), )
         plan.swap(start_date1 >> end_sim, ("ogc", "res_ogc"), )
 
@@ -101,15 +98,15 @@ def run(model, input_db, sim_span, _, baseline_db, ):
     db['skrat'] = input_db['skrat'].copy()
     
     for i in list(ir.yy(2023)>>ir.yy(2023)+Y3-1):
-        skrat_lag         = db['skrat'][i-1].get_data()
-        skrat_base        = input_db['skrat'][i].get_data()
-        skrat_base_lag    = input_db['skrat'][i-1].get_data()
+        skrat_lag         = db['skrat'](i-1)
+        skrat_base        = input_db['skrat'](i)       
+        skrat_base_lag    = input_db['skrat'](i-1)       
         db['skrat'][i] = (skrat_lag)*(skrat_base/skrat_base_lag)*(1+(educ_spending/Y3)/100)
 
     for i in list(ir.yy(2023)+Y3 >> end_sim):
-        skrat_lag         = db['skrat'][i-1].get_data()
-        skrat_base        = input_db['skrat'][i].get_data()
-        skrat_base_lag    = input_db['skrat'][i-1].get_data()
+        skrat_lag         = db['skrat'](i-1)
+        skrat_base        = input_db['skrat'](i)
+        skrat_base_lag    = input_db['skrat'](i-1)
         db['skrat'][i] = (skrat_lag)*(skrat_base/skrat_base_lag)
 
     #plan.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works

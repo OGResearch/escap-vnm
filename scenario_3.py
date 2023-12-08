@@ -1,4 +1,4 @@
-# Scenario 3 runner: xxx
+# Scenario 3 runner: ICT investment scenario
 
 
 import irispie as ir
@@ -12,20 +12,7 @@ OUTPUT_FILE_NAME = os.path.join(
 
 def run(model, input_db, sim_span, _, baseline_db, ):
 
-    # # Scenario 3 assumptions
-    # db_asu3 = ir.Databox.from_sheet(
-    #     "Scenarios_with_female/Scenario_3/result_scen3_asu.csv",
-    #     name_row_transform=utils.rename_input_data,
-    #     description_row=False,
-    # )
-
-    # # Scenario 3 result for comparison
-    # db_scen3 = ir.Databox.from_sheet(
-    #     "Scenarios_with_female/Scenario_3/result_scen3.csv",
-    #     name_row_transform=utils.rename_input_data,
-    #     description_row=False,
-    # )
-
+    # Import the raw database and residuals from the baseline scenario
     db = input_db.copy()
     res_names = (n for n in model.get_names() if n.startswith("res_"))
     for n in res_names:
@@ -33,78 +20,81 @@ def run(model, input_db, sim_span, _, baseline_db, ):
 
 
     #
-    # Scenario 3 tunes
+    # Scenario 4 tunes
     #
     
     start_sim = sim_span.start_date
     end_sim = sim_span.end_date
 
-    # Assumptions to set
-    # Set the level of carbon subsidies (US$ per tonne CO2) in 2021
-    shock0 = 13.9
+    # Assumptions to set:
+    # Set the size of investment in ICT per year between 2021-2025 (as bln LCY)
+    shock1  = 20890
     
-    # Set the level of carbon tax (US$ per tonne CO2) in 2022
-    shock1 = 12 
+    # Set share of ICT investment financed by the government between 2021-2025 (%)"
+    shock1a = 7
     
-    # Set the level of carbon tax (US$ per tonne CO2) in 2023
-    shock2 = 25
+    # Set the size of investment in ICT per year between 2026-2030 (as bln LCY)
+    shock2  = 32450
     
-    # Set the level of carbon tax (US$ per tonne CO2) in 2040
-    shock3 = 90
-
-    # Set the share of the extra carbon tax income to be used as compensation payment on social protection (in % of carbon tax income)
-    shock4 = 0
+    # Set share of ICT investment financed by the government between 2026-2030 (%)"
+    shock2a = 3
     
-    # Set the share of the extra carbon tax income to be used as compensation payment on health protection (in % of carbon tax income)
-    shock5 = 0
+    # Set the year when the shock is first introduced
+    YR1 = 2021
     
-    # Set the share of the extra carbon tax income to be used for enviromental protection (in % of carbon tax income)
-    shock6 = 0
+    # Enter number of years over which to spread the investment shock first period
+    Y3  = 5
     
-    # Set the share of the extra carbon tax income to be used for energy efficiency (in % of carbon tax income)
-    shock7 = 0
-
-    # Set the year when the shocks are introduced
-    YR1 = 2023
-    
-    # Enter number of years over when carbon tax is implemented
-    Y1  = 17
-    
-    # Enter number of years over when carbon subsidy is eased
-    Y2  = 2
+    # Enter number of years over which to spread the investment shock second period
+    Y4  = 5
 
     # Create the investment periods:
         # 1st investment period
-    start_date1          = ir.yy(2022)
-    end_date1            = ir.yy(YR1)+Y1-1
-    tax_span             = start_date1 >> end_sim #tax is collected
-    span_end             = end_date1+1 >> end_sim #after final tax rate is in place
+    start_date1          = ir.yy(YR1)
+    end_date1            = ir.yy(YR1)+Y3-1
+    investment_span_1    = start_date1 >> end_date1
+        # 2nd investment period
+    start_date2          = ir.yy(YR1)+Y3
+    end_date2            = ir.yy(YR1)+Y3+Y4-1
+    investment_span_2    = start_date2 >> end_date2
+        # end: after investment period
+    span_end             = end_date2+1 >> end_sim
 
-    # Scenario 3 shocks:
+    # Scenario 4 tunes:
         # Add shocks
+    
+    # private investment shock
+    db['res_ipr'][investment_span_1] = baseline_db['res_ipr'] + input_db['ipr_eviews'] + 0.2*((1-shock1a/100)*shock1)/input_db['yen']*input_db['yer']/input_db['ipr']
+    db['res_ipr'][investment_span_2] = baseline_db['res_ipr'] + input_db['ipr_eviews'] + 0.2*((1-shock2a/100)*shock2)/input_db['yen']*input_db['yer']/input_db['ipr']
+    db['res_ipr'][span_end]          = baseline_db['res_ipr'] + input_db['ipr_eviews']
+    db['ipr_eviews']                 = 0
 
-        # Exogenize additional variables
-    # generate the carbon tax rate series
-    db['gcarbr'][ir.yy(2021)] = - shock0
-    db['gcarbr'][ir.yy(2022)] = db['gcarbr'][ir.yy(2021)].get_data() + shock0/Y2 + shock1
-    db['gcarbr'][ir.yy(2023)] = db['gcarbr'][ir.yy(2022)].get_data() + shock0/Y2 + (shock2-shock1)
-    for i in list(ir.yy(2024) >> end_date1):
-        db['gcarbr'][i] = db['gcarbr'][i-1].get_data() + (shock3-shock2)/Y1
-    db['gcarbr'][span_end] = shock3
-    # generate tax revenue spending shocks
-    db['sharesp'][tax_span]    = shock4/100
-    db['shareh'][tax_span]     = shock5/100
-    db['sharee'][tax_span]     = shock6/100
-    db['sharex'][tax_span]     = shock7/100
+    # technolgy shock
+    db['res_techl'][investment_span_1]  = baseline_db['res_techl'] + input_db['techl_eviews'] + 0.0022*shock1/input_db['yen']*100
+    db['res_techl'][investment_span_2]  = baseline_db['res_techl'] + input_db['techl_eviews'] + 0.0022*shock1/input_db['yen']*100
+    db['res_techl'][span_end]           = baseline_db['res_techl'] + input_db['techl_eviews']
+    db['techl_eviews']                  = 0
+
+    # financial inclusion shock
+    db['res_finc'][investment_span_1]  = baseline_db['res_finc'] + input_db['finc_eviews'] + 0.4*shock1/input_db['yen']*100
+    db['res_finc'][investment_span_2]  = baseline_db['res_finc'] + input_db['finc_eviews'] + 0.4*shock2/input_db['yen']*100
+    db['res_finc'][span_end]           = baseline_db['res_finc'] + input_db['finc_eviews']
+    db['finc_eviews']                  = 0
+
+        # Exogenize variables
+    
+    # add government investement
+    db['ogi'][investment_span_1] = input_db['ogi'] + shock1 * shock1a/100 
+    db['ogi'][investment_span_2] = input_db['ogi'] + shock2 * shock2a/100   
+    db['ogi'][span_end]          = input_db['ogi']
+    # technical tune: overwrite relative redistribution 
+    db['rel_red']                = input_db['rel_red']
+
 
     plan = ir.PlanSimulate(model, sim_span, )
-    plan.swap(sim_span, ("gcarbr", "res_gcarbr"), )
-    plan.swap(sim_span, ("sharee", "res_sharee"), )
-    plan.swap(sim_span, ("sharesp", "res_sharesp"), )
-    plan.swap(sim_span, ("shareh", "res_shareh"), )
-    plan.swap(sim_span, ("sharex", "res_sharex"), )
-    #plan.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
-
+    plan.swap(sim_span, ("ogi", "res_ogi"), )
+    plan.swap(sim_span, ("rel_red", "res_rel_red"), )
+    # plan.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
 
     sim_db, *_ = model.simulate(db, sim_span, method="period", plan=plan, )
 

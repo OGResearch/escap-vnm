@@ -1,4 +1,4 @@
-# Scenario 1 runner: xxx
+# Scenario 1_1 runner: Renewable energy investment scenario
 
 
 import irispie as ir
@@ -6,40 +6,25 @@ import os
 
 
 OUTPUT_FILE_NAME = os.path.join(
-    "scenario_data_files", "scenario_1.csv",
+    "scenario_data_files", "scenario_1_1.csv",
 )
 
 
 def run(model, input_db, sim_span, _, baseline_db, ):
 
-    # Scenario 1 assumption
-    #db_asu = ir.Databox.from_sheet(
-    #    "Scenarios_with_female/Scenario_1/result_scen1_asu.csv",
-    #    name_row_transform=utils.rename_input_data,
-    #    description_row=False,
-    #)
-
-    # db = input_db.copy()
-
-    #db.update(db_asu) #add the scenario assumpions from eview to the input_db, not needed if you set up the tunes below
-
-    # add baseline shock to the simulation
-    #res_variable_list = [
-    #    variable_name
-    #    for variable_name in baseline_db.get_names()
-    #    if variable_name.startswith("res")
-    #]
-
+    # Import the raw database and residuals from the baseline scenario
     db = input_db.copy()
     res_names = (n for n in model.get_names() if n.startswith("res_"))
     for n in res_names:
          db[n] = baseline_db[n]
+
 
     #
     # Scenario 1 tunes
     #
 
     start_sim = sim_span.start_date
+    end_sim = sim_span.end_date
 
 
     # Set the size of investment in renewables per year until 2030 (bln USD)
@@ -85,8 +70,8 @@ def run(model, input_db, sim_span, _, baseline_db, ):
 
     # Scenario 1 tunes:
         # Add shocks
-    #db["res_ipr"] = db_asu["ipr_eviews"] + baseline_db["res_ipr"]
-
+    
+    # private investment shock
     db["res_ipr"][investment_span_1] = \
         baseline_db["res_ipr"] \
         + input_db["ipr_eviews"] \
@@ -99,7 +84,7 @@ def run(model, input_db, sim_span, _, baseline_db, ):
 
     db["ipr_eviews"] = 0
 
-    #db["res_rc"] = db_asu["rc_eviews"] + baseline_db["res_rc"]
+    # renewable energy shock
     db["res_rc"][investment_span_1] = \
         baseline_db["res_rc"] + input_db["rc_eviews"] + 0.3*(ir.log(shock3) - ir.log(initial_rc))/Y3
 
@@ -108,14 +93,16 @@ def run(model, input_db, sim_span, _, baseline_db, ):
 
     db["rc_eviews"] = 0
 
-    # Exogenized variables
+        # Exogenized variables
+    # add extra government investment
     db["ogi"][investment_span_1] = input_db["ogi"] + input_db["exr"] * shock1 * shock5/100
 
     db["ogi"][investment_span_2] = input_db["ogi"] + input_db["exr"] * shock2 * shock5/100
 
+    # change renewable energy price
     db["pr"] = input_db["pr"].copy()
 
-    # Gross rate of change in pr
+        # Gross rate of change in pr
     input_db["roc_pr"] = ir.roc(input_db["pr"])
 
     for t in investment_span_1:

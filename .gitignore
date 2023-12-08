@@ -16,3 +16,5 @@ s_scen4_female.csv
 __pycache__
 result_residuals_addshocks.xlsx
 s1_female.csv
+visualization.py
+/Scenario_4/result_scen4_asu.csv

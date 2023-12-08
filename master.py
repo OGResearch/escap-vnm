@@ -6,12 +6,11 @@ import utils
 import sys
 
 import scenario_baseline
-import scenario_1
+import scenario_1_1
+import scenario_1_2
 import scenario_2_1
 import scenario_2_2
 import scenario_3
-import scenario_4
-
 
 
 ir.min_irispie_version_required("0.25.0", )
@@ -20,11 +19,11 @@ ir.min_irispie_version_required("0.25.0", )
 # Setup which scenarios to run
 scenarios_to_run = (
     "baseline",
-    #"scenario_1",
+    #"scenario_1_1",
+    #"scenario_1_2",
     #"scenario_2_1",
-    #"scenario_2_2",
+    "scenario_2_2",
     #"scenario_3",
-    "scenario_4",
     "compare",
 )
 
@@ -107,19 +106,29 @@ else:
     )
 
 #
-# Scenario 1
+# Scenario 1_1: Renewable energy investment scenario
 #
 
-if "scenario_1" in scenarios_to_run:
+if "scenario_1_1" in scenarios_to_run:
 
-    sim_db_1 = scenario_1.run(
+    sim_db_1_1 = scenario_1_1.run(
         model, input_db,
         sim_span, short_tune_span, sim_db_baseline,
     )
 
+#
+# Scenario 1_2: Carbon Tax scenario
+#
+
+if "scenario_1_2" in scenarios_to_run:
+
+    sim_db_1_2 = scenario_1_2.run(
+        model, input_db,
+        sim_span, short_tune_span, sim_db_baseline,
+    )
 
 #
-# Scenario 2_1
+# Scenario 2_1: National Target Program scenario
 #
 
 if "scenario_2_1" in scenarios_to_run:
@@ -130,7 +139,7 @@ if "scenario_2_1" in scenarios_to_run:
     )
 
 #
-# Scenario 2_2
+# Scenario 2_2: Education investment scenario
 #
 
 if "scenario_2_2" in scenarios_to_run:
@@ -142,7 +151,7 @@ if "scenario_2_2" in scenarios_to_run:
 
 
 #
-# Scenario 3
+# Scenario 3: ICT investment scenario
 #
 
 if "scenario_3" in scenarios_to_run:
@@ -152,28 +161,17 @@ if "scenario_3" in scenarios_to_run:
         sim_span, short_tune_span, sim_db_baseline,
     )
     
-#
-# Scenario 4
-#
-
-if "scenario_4" in scenarios_to_run:
-
-    sim_db_4 = scenario_4.run(
-        model, input_db,
-        sim_span, short_tune_span, sim_db_baseline,
-    )
 
 sys.exit()
 
 
-#
 #
 # Compare scenarios
 #
 
 if "compare" in scenarios_to_run:
 
-    scenario  = sim_db_1 # replace me with the scenario
+    scenario  = sim_db_3 # replace me with the scenario
     reference = sim_db_baseline # replace me with the reference databox
     tolerance = 0.1 # set up the difference you allow in % (0.1 means 0.1%)
     cmp_year  = ir.yy(2050) # set up the year when you want to compare the scenarios
