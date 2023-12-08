@@ -7,6 +7,7 @@ import sys
 
 import scenario_baseline
 import scenario_1
+import scenario_2_1
 
 
 ir.min_irispie_version_required("0.25.0", )
@@ -15,8 +16,8 @@ ir.min_irispie_version_required("0.25.0", )
 # Setup which scenarios to run
 scenarios_to_run = (
     "baseline",
-    "scenario_1",
-    "scenario2_1",
+    #"scenario_1",
+    "scenario_2_1",
     #"scenario2_2",
     #"scenario3",
     #"scenario4",
@@ -113,161 +114,19 @@ if "scenario_1" in scenarios_to_run:
     )
 
 
-sys.exit()
-
+#
 # Scenario 2_1
+#
 
-if "scenario2_1" in scenarios_to_run:
-    # Scenario 2_1 assumption
-    db_asu2_1 = ir.Databox.from_sheet(
-        "Scenarios_with_female/Scenario_2_1/result_scen2_1_asu.csv",
-        name_row_transform=utils.rename_input_data,
-        description_row=False,
+if "scenario_2_1" in scenarios_to_run:
+
+    sim_db_2_1 = scenario_2_1.run(
+        model, input_db,
+        sim_span, short_tune_span, sim_db_baseline,
     )
-
-    # Scenario 2_1 result for comparison
-    db_scen2_1 = ir.Databox.from_sheet(
-        "Scenarios_with_female/Scenario_2_1/result_scen2_1.csv",
-        name_row_transform=utils.rename_input_data,
-        description_row=False,
-    )
-
-    # create the fcast database
-    db2_1 = db1.copy()
-    # db2_1.update(db_asu2_1) #add the scenario assumpions to the input_db
-
-    # add baseline shock to the simulation
-    res_variable_list = [variable_name for variable_name in baseline_db.get_names() if variable_name.startswith('res')]
-    for variable_name in res_variable_list:
-         db2_1[variable_name] = baseline_db[variable_name]
-
-    #
-    # Scenario 2_1 tunes
-    #
-
-    # Assumptions to set
-    # Set the size of investment in infrastructure projects per year (as bln LCY)
-    shock1  = 51757 # 51757 + 1500 + 426899 + 8604
-    # Set share of infrastructre investment financed by the government
-    shock1a = 99 # 100
-    # Set the size of investment in health sector per year (as bln LCY)
-    shock2  = 1500 #51757 + 1500 + 426899 + 8604
-    # Set share of health investment financed by the government
-    shock2a = 73 #100
-    # Set the size of investment in social protection per year (as bln LCY)
-    shock3  = 426899 #51757 + 1500 + 426899 + 8604
-    # Set share of socia protection investment financed by the government
-    shock3a = 3 #100
-    # Set the size of investment in education per year (as bln LCY)
-    shock4  = 8604 #51757 + 1500 + 426899 + 8604
-    # Set share of education spending financed by the government
-    shock4a = 91 # 100
-
-    # Set the year when the shock is first introduced
-    YR1 = 2021
-
-    # Enter number of years over which to spread the investment shock first period
-    Y3 = 5
-
-    # Calculatethe overall education spending as % of GDP
-    educ_spending = 100*shock4 * Y3 / db1['yen'][ir.yy(2020)].get_data()
-
-    # Create the investment periods:
-        # 1st investment period
-    start_date1          = ir.yy(YR1)
-    end_date1            = ir.yy(YR1)+Y3-1
-    investment_span_1    = start_date1 >> end_date1
-        # end: after investment period
-    span_end             = end_date1+1 >> end_sim
-
-    # Scenario 2_1 tunes:
-        # Add shocks
-    #db2_1['res_ipr']                = baseline_db['res_ipr'] + db_asu2_1['ipr_eviews']
-    db2_1['res_ipr'][investment_span_1]   = baseline_db['res_ipr'] + db1['ipr_eviews'] + 0.001*((1-shock1a/100)*shock1 + (1-shock2a/100)*shock2 + (1-shock3a/100)*shock3 + (1-shock4a/100)*shock4)/db1['yen']*db1['yer']/db1['ipr']
-    db2_1['res_ipr'][span_end]            = baseline_db['res_ipr'] + db1['ipr_eviews']
-    db2_1['ipr_eviews']                   = 0
-
-    #db2_1['res_techl']                = baseline_db['res_techl'] + db_asu2_1['techl_eviews']
-    db2_1['res_techl'][investment_span_1] = baseline_db['res_techl'] + db1['techl_eviews'] + 0.1*shock4/db1['yen'] + 0.2* shock1/db1['yen']
-    db2_1['res_techl'][span_end]          = baseline_db['res_techl'] + db1['techl_eviews']
-    db2_1['techl_eviews']                 = 0
-
-    #db2_1['res_gini_disp']      = baseline_db['res_gini_disp'] + db_asu2_1['gini_disp_eviews']
-    db2_1['res_gini_disp'][start_date1 >> start_date1 + 25] = baseline_db['res_gini_disp'] + db1['gini_disp_eviews'] - 0.005*(shock4)/db1['yen']*100
-    db2_1['res_gini_disp'][start_date1 + 25 + 1 >> end_sim]= baseline_db['res_gini_disp'] + db1['gini_disp_eviews']
-    db2_1['gini_disp_eviews']             = 0
-
-    #db2_1['res_pm25']           = baseline_db['res_pm25'] + db_asu2_1['pm25_eviews']
-    db2_1['res_pm25'][start_date1 >> start_date1 + 9] = baseline_db['res_pm25'] + db1['pm25_eviews'] - 0.6*shock1/db1['yen']
-    db2_1['res_pm25'][start_date1 + 9 + 1 >> end_sim]= baseline_db['res_pm25'] + db1['pm25_eviews']
-    db2_1['pm25_eviews']                  = 0
-
-    #db2_1['res_rel_red']        = baseline_db['res_rel_red'] + db_asu2_1['rel_red_eviews']
-    db2_1['res_rel_red'][investment_span_1] = baseline_db['res_rel_red'] + db1['rel_red_eviews'] +  0.8* (1-(shock3a/100))* shock3/db1['yen']*100
-    db2_1['res_rel_red'][span_end]          = baseline_db['res_rel_red'] + db1['rel_red_eviews']
-    db2_1['rel_red_eviews']                 = 0
-
-    #db2_1['rpdi_eviews']        = db_asu2_1['rpdi_eviews'] # no shock in iripie on this variable, overwrite the eviews constant shock
-    db2_1['rpdi_eviews']                    = (1-(shock3a/100))* shock3 / db1['hic']
-    db2_1['rpdi_eviews'][span_end]          = baseline_db['rpdi_eviews']
-
-
-        # Exogenized variables
-    db2_1['ogi'][investment_span_1]     = db1['ogi'] + shock1 * (shock1a/100) + shock4 * (shock4a/100)
-    db2_1['ogi'][span_end]              = db2_1['ogi']
-
-    db2_1['exph'][investment_span_1]    = db1['exph'] + shock2 * (shock2a/100)
-    db2_1['exph'][span_end]             = db2_1['exph']
-
-    db2_1['expsp'][investment_span_1]   = db1['expsp'] + shock3 * (shock3a/100)
-    db2_1['expsp'][span_end]            = db2_1['expsp']
-
-    # calculate eff shock
-    db2_1['eff'] = db1['eff'].copy()
-    for i in list(start_date1 >> start_date1 + 9):
-        eff_lag         = db2_1['eff'][i-1].get_data()
-        eff_base        = db1['eff'][i].get_data()
-        eff_base_lag    = db1['eff'][i-1].get_data()
-        yen             = db1['yen'][i].get_data()
-        db2_1['eff'][i] = (eff_lag) + (eff_base-eff_base_lag) + 0.01*(100*(shock1/yen)/0.62)
-
-    for i in list(start_date1 + 9 + 1 >> end_sim):
-        eff_lag         = db2_1['eff'][i-1].get_data()
-        eff_base        = db1['eff'][i].get_data()
-        eff_base_lag    = db1['eff'][i-1].get_data()
-        yen             = db1['yen'][i].get_data()
-        db2_1['eff'][i] = (eff_lag) + (eff_base-eff_base_lag)
-
-    # calculate skrat shock
-    db2_1['skrat'] = db1['skrat'].copy()
-    for i in list(ir.yy(2023)>>ir.yy(2023)+Y3-1):
-        skrat_lag         = db2_1['skrat'][i-1].get_data()
-        skrat_base        = db1['skrat'][i].get_data()
-        skrat_base_lag    = db1['skrat'][i-1].get_data()
-        db2_1['skrat'][i] = (skrat_base_lag)*(skrat_base/skrat_base_lag)*(1+(educ_spending/Y3)/100)
-
-    for i in list(ir.yy(2023)+Y3 >> end_sim):
-        skrat_lag         = db2_1['skrat'][i-1].get_data()
-        skrat_base        = db1['skrat'][i].get_data()
-        skrat_base_lag    = db1['skrat'][i-1].get_data()
-        db2_1['skrat'][i] = (skrat_base_lag)*(skrat_base/skrat_base_lag)
-
-
-    p2 = ir.PlanSimulate(model, sim_span, )
-    p2.swap(sim_span, ("ogi", "res_ogi"), )
-    p2.swap(sim_span, ("exph", "res_exph"), )
-    p2.swap(sim_span, ("expsp", "res_expsp"), )
-    p2.swap(sim_span, ("eff", "res_eff"), )
-    #p2.swap(sim_span, ("lrxf", "res_lrxf"), )   # it is here to check how irispie LRXF formula works
-    p2.swap(sim_span, ("skrat", "res_skrat"), )
-
-
-    s_scen2_1_female, *_ = model.simulate(db2_1, sim_span, method="period", plan=p2, )
-    s_scen2_1_female.to_sheet("s_scen2_1_female.csv", )
 
 
 sys.exit()
-
 
 # Scenario 2_2
 
